@@ -1,0 +1,22 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.vscode/
+*.log
+
+# Build outputs
+bin/
+obj/
+
+# EF Core database files (if any)
+*.sqlite
+*.db
+
+# Node / React (if you have frontend)
+node_modules/
+dist/
+build/
+
+# Environment files
+.env

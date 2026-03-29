@@ -1,0 +1,15 @@
+﻿namespace backend.Models
+{
+	public class Artisti
+	{
+		public int Id { get; set; }
+		public string Emri { get; set; } = string.Empty;
+		public string Mbiemri { get; set; } = string.Empty;
+		public string Biografia { get; set; } = string.Empty;
+		public string Specializimi { get; set; } = string.Empty;
+		public string Telefoni { get; set; } = string.Empty;
+		public string Email { get; set; } = string.Empty;
+		public string Website { get; set; } = string.Empty;
+		public string Shteti { get; set; } = string.Empty;
+	}
+}
