@@ -64,10 +64,10 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Artistes");
+                    b.ToTable("Artistet");
                 });
 
-            modelBuilder.Entity("backend.Models.Concert", b =>
+            modelBuilder.Entity("backend.Models.Ekspozita", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,27 +75,23 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DataFillimit")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("SallaEksponimit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Titulli")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Concerts");
+                    b.ToTable("Ekspozitat");
                 });
 
-            modelBuilder.Entity("backend.Models.Salla", b =>
+            modelBuilder.Entity("backend.Models.VepratArtit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,53 +99,60 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Emri")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Kati")
+                    b.Property<int>("ArtistiID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Pajisjet")
+                    b.Property<int?>("EkspozitaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Materiali")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Pershkrimi")
+                    b.Property<string>("Titulli")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Statusi")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Viti")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Vlera")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sallas");
+                    b.HasIndex("ArtistiID");
+
+                    b.HasIndex("EkspozitaId");
+
+                    b.ToTable("VepratArtit");
                 });
 
-            modelBuilder.Entity("backend.Models.User", b =>
+            modelBuilder.Entity("backend.Models.VepratArtit", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("backend.Models.Artisti", "Artisti")
+                        .WithMany("Veprat")
+                        .HasForeignKey("ArtistiID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.HasOne("backend.Models.Ekspozita", "Ekspozita")
+                        .WithMany("Veprat")
+                        .HasForeignKey("EkspozitaId");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Navigation("Artisti");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Navigation("Ekspozita");
+                });
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity("backend.Models.Artisti", b =>
+                {
+                    b.Navigation("Veprat");
+                });
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+            modelBuilder.Entity("backend.Models.Ekspozita", b =>
+                {
+                    b.Navigation("Veprat");
                 });
 #pragma warning restore 612, 618
         }
