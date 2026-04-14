@@ -3,16 +3,21 @@ using backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
-builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReact",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
 
-// Configure EF Core with SQL Server
+builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Map controllers
-app.MapControllers();
+app.UseCors("AllowReact"); 
 
+app.MapControllers();
 app.Run();
