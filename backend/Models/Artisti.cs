@@ -1,4 +1,6 @@
-﻿namespace backend.Models
+﻿using System;
+using System.Collections.Generic;
+namespace backend.Models
 {
 	public class Artisti
 	{
@@ -11,5 +13,7 @@
 		public string Email { get; set; } = string.Empty;
 		public string Website { get; set; } = string.Empty;
 		public string Shteti { get; set; } = string.Empty;
+
+		public List<VepratArtit> Veprat { get; set; } = new();
 	}
 }
