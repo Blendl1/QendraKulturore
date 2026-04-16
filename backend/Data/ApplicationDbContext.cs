@@ -11,5 +11,11 @@ namespace backend.Data
         public  DbSet<Artisti> Artistet { get; set; }        
         public DbSet<VepratArtit> VepratArtit { get; set; }
         public DbSet<Ekspozita> Ekspozitat { get; set; }
-    }
+
+		public DbSet<Ngjarja> Ngjarjet { get; set; }
+		public DbSet<NgjarjeArtist> NgjarjeArtistet { get; set; }
+        
+        public DbSet<Bileta> Biletat { get; set; }
+
+	}
 }
