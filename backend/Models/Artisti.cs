@@ -15,5 +15,7 @@ namespace backend.Models
 		public string Shteti { get; set; } = string.Empty;
 
 		public List<VepratArtit> Veprat { get; set; } = new();
+
+		public List<NgjarjeArtist> NgjarjeArtistet { get; set; } = new();
 	}
 }

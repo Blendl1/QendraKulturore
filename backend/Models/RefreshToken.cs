@@ -1,0 +1,14 @@
+﻿namespace backend.Models
+{
+	public class RefreshToken
+	{
+		public int Id { get; set; }
+		public string Token { get; set; } = string.Empty;
+		public string UserId { get; set; } = string.Empty;
+		public DateTime ExpiresAt { get; set; }
+		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+		public bool IsRevoked { get; set; } = false;
+		public bool IsUsed { get; set; } = false;
+		public AppUser User { get; set; } = null!;
+	}
+}
