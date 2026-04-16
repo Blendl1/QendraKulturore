@@ -67,6 +67,39 @@ namespace backend.Migrations
                     b.ToTable("Artistet");
                 });
 
+            modelBuilder.Entity("backend.Models.Bileta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Cmimi")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DataBlerjes")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Lloji")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NgjarjeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PjesemarresId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statusi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Biletat");
+                });
+
             modelBuilder.Entity("backend.Models.Ekspozita", b =>
                 {
                     b.Property<int>("Id")
@@ -89,6 +122,84 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Ekspozitat");
+                });
+
+            modelBuilder.Entity("backend.Models.Ngjarja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CmimiBiletes")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DataFillimit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataPerfundimit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Lloji")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrganizatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pershkrimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SallaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statusi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulli")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ngjarjet");
+                });
+
+            modelBuilder.Entity("backend.Models.NgjarjeArtist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Honorari")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("NgjarjaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Roli")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Shenimet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.HasIndex("NgjarjaId");
+
+                    b.ToTable("NgjarjeArtistet");
                 });
 
             modelBuilder.Entity("backend.Models.VepratArtit", b =>
@@ -126,6 +237,25 @@ namespace backend.Migrations
                     b.HasIndex("EkspozitaId");
 
                     b.ToTable("VepratArtit");
+                });
+
+            modelBuilder.Entity("backend.Models.NgjarjeArtist", b =>
+                {
+                    b.HasOne("backend.Models.Artisti", "Artist")
+                        .WithMany()
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.Ngjarja", "Ngjarja")
+                        .WithMany()
+                        .HasForeignKey("NgjarjaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+
+                    b.Navigation("Ngjarja");
                 });
 
             modelBuilder.Entity("backend.Models.VepratArtit", b =>
