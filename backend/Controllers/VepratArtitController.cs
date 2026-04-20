@@ -16,7 +16,15 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/VepratArtit/stats (Për Dashboard Widget)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VepratArtit>>> GetVeprat()
+        {
+            return await _context.VepratArtit
+                .Include(v => v.Artisti)
+                .Include(v => v.Ekspozita)
+                .ToListAsync();
+        }
+
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
@@ -25,13 +33,36 @@ namespace backend.Controllers
             return Ok(new { totalValue, totalCount });
         }
 
-        // POST: api/VepratArtit (Shto vepër)
         [HttpPost]
         public async Task<ActionResult<VepratArtit>> PostVepra(VepratArtit vepra)
         {
             _context.VepratArtit.Add(vepra);
             await _context.SaveChangesAsync();
             return Ok(vepra);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutVepra(int id, VepratArtit vepra)
+        {
+            if (id != vepra.Id)
+                return BadRequest();
+
+            _context.Entry(vepra).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVepra(int id)
+        {
+            var vepra = await _context.VepratArtit.FindAsync(id);
+            if (vepra == null) return NotFound();
+
+            _context.VepratArtit.Remove(vepra);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
