@@ -17,5 +17,11 @@ namespace backend.Data
         
         public DbSet<Bileta> Biletat { get; set; }
 
+        public DbSet<Salla> Sallat { get; set; }
+        public DbSet<Sponzori> Sponzoret { get; set; }
+        public DbSet<Punetori> Punetoret { get; set; }
+        public DbSet<User> Users { get; set; }
+
+
 	}
 }
