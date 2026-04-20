@@ -20,5 +20,7 @@
 		public string Statusi { get; set; }
 
 		public decimal CmimiBiletes { get; set; }
+
+		public List<NgjarjeArtist> NgjarjeArtistet { get; set; } = new();
 	}
 }
