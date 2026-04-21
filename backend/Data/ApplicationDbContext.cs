@@ -7,7 +7,6 @@ namespace backend.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // This MUST be plural "Artistet" to match your Controller
         public  DbSet<Artisti> Artistet { get; set; }        
         public DbSet<VepratArtit> VepratArtit { get; set; }
         public DbSet<Ekspozita> Ekspozitat { get; set; }
