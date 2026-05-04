@@ -76,18 +76,26 @@ builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
 builder.Services.AddScoped<IBiletaService, BiletaService>();
 builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
 
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes("ky_eshte_celesi_im_shume_i_sigurte_123456789")),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+	.AddJwtBearer(options =>
+	{
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(
+				Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+
+			ValidateIssuer = true,
+			ValidIssuer = jwtSettings["Issuer"],
+
+			ValidateAudience = true,
+			ValidAudience = jwtSettings["Audience"],
+
+			ValidateLifetime = true
+		};
+	});
 
 var app = builder.Build();
 
