@@ -1,0 +1,94 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace backend.Migrations
+{
+    /// <inheritdoc />
+    public partial class ShtuarAuthUser : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Punetoret",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Emri = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Mbiemri = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pozita = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Paga = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Punetoret", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sallat",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Emri = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Kati = table.Column<int>(type: "int", nullable: false),
+                    Pajisjet = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Statusi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Pershkrimi = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sallat", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sponzoret",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Emri = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShumaSponsoring = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sponzoret", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Punetoret");
+
+            migrationBuilder.DropTable(
+                name: "Sallat");
+
+            migrationBuilder.DropTable(
+                name: "Sponzoret");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+        }
+    }
+}

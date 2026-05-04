@@ -16,6 +16,10 @@ namespace backend.Data
 		public DbSet<NgjarjeArtist> NgjarjeArtistet { get; set; }
 		public DbSet<Bileta> Biletat { get; set; }
 		public DbSet<RefreshToken> RefreshTokens { get; set; }
+		public DbSet<Salla> Sallat { get; set; }
+		public DbSet<Sponzori> Sponzoret { get; set; }
+		public DbSet<Punetori> Punetoret { get; set; }
+		public DbSet<User> Users { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{

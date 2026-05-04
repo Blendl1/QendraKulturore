@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
+	[Authorize]
+	[ApiController]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class NgjarjaController : ControllerBase
@@ -15,12 +18,14 @@ namespace backend.Controllers
 			_ngjarjaService = ngjarjaService;
 		}
 
+		[AllowAnonymous]  
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Ngjarja>>> GetAll()
 		{
 			return Ok(await _ngjarjaService.GetAllAsync());
 		}
 
+		[AllowAnonymous]  // ← anyone can view one event
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Ngjarja>> GetById(int id)
 		{

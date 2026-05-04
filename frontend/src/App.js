@@ -1,50 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Artistet from './components/Artistet';
-import VepratArtit from './components/VepratArtit';
-import Ekspozitat from './components/Ekspozitat';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Ngjarjet from './pages/Ngjarjet';
+import NgjarjaForm from './pages/NgjarjaForm';
+import Biletat from './pages/Biletat';
+import Home from './pages/Home';
+import EventDetail from './pages/EventDetail';
+
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div style={{ color: '#fff', padding: 40 }}>Duke ngarkuar...</div>;
+  return user ? children : <Navigate to="/login" />;
+}
 
 function App() {
-  const [stats, setStats] = useState({ totalValue: 0, totalCount: 0 });
-
-  useEffect(() => {
-    const fetchStats = () => {
-      fetch('http://localhost:5002/api/VepratArtit/stats')
-        .then(res => res.json())
-        .then(data => setStats(data))
-        .catch(err => console.log("Backend nuk po përgjigjet ende..."));
-    };
-    fetchStats();
-    const interval = setInterval(fetchStats, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <Router>
-      <nav>
-        <Link to="/veprat">Veprat e Artit</Link>
-        <Link to="/">Artistët</Link>
-        <Link to="/ekspozitat">Ekspozitat</Link>
-      </nav>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route path="/home" element={<Home />} />
 
-      <div className="dashboard-widget">
-        <div className="stat-item">
-          <strong>Vlera Totale</strong>
-          <span>{stats.totalValue} €</span>
-        </div>
-        <div className="stat-item">
-          <strong>Numri i Veprave</strong>
-          <span>{stats.totalCount}</span>
-        </div>
-      </div>
+          {/* USER AUTH */}
+          <Route path="/login" element={<Login />} />
 
-      <Routes>
-        <Route path="/veprat" element={<VepratArtit />} />
-        <Route path="/" element={<Artistet />} />
-        <Route path="/ekspozitat" element={<Ekspozitat />} />
-      </Routes>
-    </Router>
+          {/* ADMIN ROUTES */}
+          <Route path="/dashboard" element={
+            <PrivateRoute><Dashboard /></PrivateRoute>
+          } />
+          <Route path="/ngjarjet" element={
+            <PrivateRoute><Ngjarjet /></PrivateRoute>
+          } />
+          <Route path="/ngjarjet/create" element={
+            <PrivateRoute><NgjarjaForm /></PrivateRoute>
+          } />
+          <Route path="/ngjarjet/:id" element={
+            <PrivateRoute><NgjarjaForm /></PrivateRoute>
+          } />
+          <Route path="/biletat" element={
+            <PrivateRoute><Biletat /></PrivateRoute>
+          } />
+
+          {/* DEFAULT → public homepage */}
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="*" element={<Navigate to="/home" />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

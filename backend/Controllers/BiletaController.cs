@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class BiletaController : ControllerBase
@@ -35,7 +37,7 @@ namespace backend.Controllers
 			return Ok(bileta);
 		}
 
-		
+		[AllowAnonymous]  // ← users can buy tickets
 		[HttpPost]
 		public async Task<ActionResult<Bileta>> Create([FromBody] Bileta bileta)
 		{

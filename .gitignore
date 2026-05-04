@@ -1,22 +1,26 @@
-# Visual Studio
+# --- Visual Studio & IDEs ---
 .vs/
+.vscode/
 *.user
 *.suo
-*.vscode/
 *.log
 
-# Build outputs
-bin/
-obj/
+# --- Backend (ASP.NET Core) ---
+# Kjo bllokon bin dhe obj brenda folderit backend
+backend/bin/
+backend/obj/
+# Kjo bllokon Connection String-un tend qe pame te fotoja
+backend/appsettings.json
+backend/appsettings.Development.json
 
-# EF Core database files (if any)
+# --- Frontend (React) ---
+# Kjo bllokon folderin gjigant node_modules brenda frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+
+# --- Database ---
 *.sqlite
 *.db
-
-# Node / React (if you have frontend)
-node_modules/
-dist/
-build/
-
-# Environment files
-.env

@@ -407,6 +407,144 @@ namespace backend.Migrations
                     b.ToTable("NgjarjeArtistet");
                 });
 
+            modelBuilder.Entity("backend.Models.Punetori", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Emri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mbiemri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Paga")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Pozita")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Punetoret");
+                });
+
+            modelBuilder.Entity("backend.Models.Salla", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Emri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Kati")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pajisjet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Pershkrimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Statusi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sallat");
+                });
+
+            modelBuilder.Entity("backend.Models.Ngjarja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CmimiBiletes")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DataFillimit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataPerfundimit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Lloji")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrganizatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pershkrimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SallaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statusi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulli")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ngjarjet");
+                });
+
+            modelBuilder.Entity("backend.Models.NgjarjeArtist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Honorari")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("NgjarjaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Roli")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Shenimet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.HasIndex("NgjarjaId");
+
+                    b.ToTable("NgjarjeArtistet");
+                });
+
             modelBuilder.Entity("backend.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -442,7 +580,55 @@ namespace backend.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("backend.Models.VepratArtit", b =>
+			modelBuilder.Entity("backend.Models.Sponzori", b =>
+			{
+				b.Property<int>("Id")
+					.ValueGeneratedOnAdd()
+					.HasColumnType("int");
+
+				SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+				b.Property<DateTime>("Data")
+					.HasColumnType("datetime2");
+
+				b.Property<string>("Emri")
+					.IsRequired()
+					.HasColumnType("nvarchar(max)");
+
+				b.Property<decimal>("ShumaSponsoring")
+					.HasColumnType("decimal(18,2)");
+
+				b.HasKey("Id");
+
+				b.ToTable("Sponzoret");
+			});
+
+			modelBuilder.Entity("backend.Models.User", b =>
+			{
+				b.Property<int>("Id")
+					.ValueGeneratedOnAdd()
+					.HasColumnType("int");
+
+				SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+				b.Property<string>("Email")
+					.IsRequired()
+					.HasColumnType("nvarchar(max)");
+
+				b.Property<string>("FullName")
+					.IsRequired()
+					.HasColumnType("nvarchar(max)");
+
+				b.Property<string>("PasswordHash")
+					.IsRequired()
+					.HasColumnType("nvarchar(max)");
+
+				b.HasKey("Id");
+
+				b.ToTable("Users");
+			});
+
+			modelBuilder.Entity("backend.Models.VepratArtit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -477,6 +663,57 @@ namespace backend.Migrations
                     b.HasIndex("EkspozitaId");
 
                     b.ToTable("VepratArtit");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("backend.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("backend.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("backend.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
