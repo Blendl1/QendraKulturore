@@ -50,9 +50,14 @@ namespace backend.Controllers
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Update(int id, [FromBody] Bileta bileta)
 		{
-			if (id != bileta.Id) return BadRequest("ID mismatch");
+			if (id != bileta.Id)
+				return BadRequest("ID mismatch");
+
 			var updated = await _biletaService.UpdateAsync(id, bileta);
-			if (!updated) return NotFound();
+
+			if (!updated)
+				return NotFound();
+
 			return NoContent();
 		}
 
@@ -61,7 +66,10 @@ namespace backend.Controllers
 		public async Task<IActionResult> Delete(int id)
 		{
 			var deleted = await _biletaService.DeleteAsync(id);
-			if (!deleted) return NotFound();
+
+			if (!deleted)
+				return NotFound();
+
 			return NoContent();
 		}
 	}

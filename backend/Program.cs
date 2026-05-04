@@ -97,6 +97,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		};
 	});
 
+builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
+
+
+builder.Services.AddScoped<IBiletaService, BiletaService>();
+builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
