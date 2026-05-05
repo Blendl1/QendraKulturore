@@ -10,10 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(
 		builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
 	options.Password.RequireDigit = true;
@@ -25,6 +27,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"]!;
 
@@ -51,14 +54,12 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
 builder.Services.AddScoped<IBiletaService, BiletaService>();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// CORS
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("ReactApp", policy =>
@@ -67,50 +68,13 @@ builder.Services.AddCors(options =>
 			  .AllowAnyMethod());
 });
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
-
-builder.Services.AddScoped<IBiletaService, BiletaService>();
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddJwtBearer(options =>
-	{
-		options.TokenValidationParameters = new TokenValidationParameters
-		{
-			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = new SymmetricSecurityKey(
-				Encoding.UTF8.GetBytes(jwtSettings["Key"])),
-
-			ValidateIssuer = true,
-			ValidIssuer = jwtSettings["Issuer"],
-
-			ValidateAudience = true,
-			ValidAudience = jwtSettings["Audience"],
-
-			ValidateLifetime = true
-		};
-	});
-
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
-
-builder.Services.AddScoped<IBiletaService, BiletaService>();
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
-
-builder.Services.AddScoped<IBiletaService, BiletaService>();
-builder.Services.AddScoped<INgjarjaService, NgjarjaService>();
-
 var app = builder.Build();
 
+// Seed roles
 using (var scope = app.Services.CreateScope())
 {
 	var roleManager = scope.ServiceProvider
@@ -128,11 +92,6 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
-
-app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseCors("AllowReact");
 
 app.UseCors("ReactApp");
 app.UseHttpsRedirection();

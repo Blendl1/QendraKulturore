@@ -19,13 +19,36 @@ namespace backend.Data
 		public DbSet<Salla> Sallat { get; set; }
 		public DbSet<Sponzori> Sponzoret { get; set; }
 		public DbSet<Punetori> Punetoret { get; set; }
-		public DbSet<User> Users { get; set; }
+		
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
 			base.OnModelCreating(builder);
 
-			
+			builder.Entity<Bileta>()
+		.Property(b => b.Cmimi)
+		.HasPrecision(18, 2);
+
+			builder.Entity<Ngjarja>()
+				.Property(n => n.CmimiBiletes)
+				.HasPrecision(18, 2);
+
+			builder.Entity<NgjarjeArtist>()
+				.Property(na => na.Honorari)
+				.HasPrecision(18, 2);
+
+			builder.Entity<Punetori>()
+				.Property(p => p.Paga)
+				.HasPrecision(18, 2);
+
+			builder.Entity<Sponzori>()
+				.Property(s => s.ShumaSponsoring)
+				.HasPrecision(18, 2);
+
+			builder.Entity<VepratArtit>()
+				.Property(v => v.Vlera)
+				.HasPrecision(18, 2);
+
 			builder.Entity<NgjarjeArtist>()
 				.HasOne(na => na.Ngjarja)
 				.WithMany(n => n.NgjarjeArtistet)
@@ -36,7 +59,6 @@ namespace backend.Data
 				.WithMany(a => a.NgjarjeArtistet)
 				.HasForeignKey(na => na.ArtistId);
 
-		
 			builder.Entity<RefreshToken>()
 				.HasOne(rt => rt.User)
 				.WithMany()

@@ -24,7 +24,7 @@ namespace backend.Controllers
 			_tokenService = tokenService;
 		}
 
-		// POST api/auth/register
+		
 		[HttpPost("register")]
 		public async Task<IActionResult> Register([FromBody] RegisterDto dto)
 		{
@@ -46,13 +46,11 @@ namespace backend.Controllers
 			if (!result.Succeeded)
 				return BadRequest(result.Errors);
 
-			// Assign default role
 			await _userManager.AddToRoleAsync(user, "User");
 
 			return Ok(new { message = "Regjistrimi u krye me sukses." });
 		}
 
-		// POST api/auth/login
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginDto dto)
 		{
@@ -60,9 +58,7 @@ namespace backend.Controllers
 			if (user == null)
 				return Unauthorized(new { message = "Email ose fjalëkalimi është gabim." });
 
-			var result = await _signInManager
-				.CheckPasswordSignInAsync(user, dto.Password, false);
-
+			var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
 			if (!result.Succeeded)
 				return Unauthorized(new { message = "Email ose fjalëkalimi është gabim." });
 
@@ -85,7 +81,7 @@ namespace backend.Controllers
 			});
 		}
 
-		// POST api/auth/refresh
+		
 		[HttpPost("refresh")]
 		public async Task<IActionResult> Refresh([FromBody] RefreshDto dto)
 		{
@@ -100,10 +96,8 @@ namespace backend.Controllers
 			if (storedToken.ExpiresAt < DateTime.UtcNow)
 				return Unauthorized(new { message = "Token ka skaduar." });
 
-			// Revoke old token
 			await _tokenService.RevokeRefreshTokenAsync(dto.RefreshToken);
 
-			// Issue new tokens
 			var user = storedToken.User;
 			var roles = await _userManager.GetRolesAsync(user);
 			var newAccessToken = _tokenService.GenerateAccessToken(user, roles);
@@ -117,7 +111,7 @@ namespace backend.Controllers
 			});
 		}
 
-		// POST api/auth/logout
+	
 		[HttpPost("logout")]
 		[Authorize]
 		public async Task<IActionResult> Logout([FromBody] RefreshDto dto)
@@ -127,7 +121,6 @@ namespace backend.Controllers
 		}
 	}
 
-	// DTOs (Data Transfer Objects) for Auth
 	public record RegisterDto(string FullName, string Email, string Password);
 	public record LoginDto(string Email, string Password);
 	public record RefreshDto(string RefreshToken);
