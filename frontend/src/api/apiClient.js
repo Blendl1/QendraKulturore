@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5002/api',
+  baseURL: `${BASE_URL}/api`,
 });
 
 // Automatically attach token to every request
@@ -12,7 +14,6 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
-
 
 apiClient.interceptors.response.use(
   (response) => response,
@@ -31,7 +32,7 @@ apiClient.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          'https://localhost:7278/api/Auth/refresh',
+          `${BASE_URL}/api/Authenticate/refresh`,
           { refreshToken }
         );
 

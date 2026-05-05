@@ -8,7 +8,7 @@ namespace backend.Controllers
 	[Authorize]
 	[ApiController]
 	[Route("api/[controller]")]
-	[ApiController]
+	
 	public class NgjarjaController : ControllerBase
 	{
 		private readonly INgjarjaService _ngjarjaService;
