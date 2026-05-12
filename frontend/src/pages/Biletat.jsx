@@ -76,10 +76,14 @@ export default function Biletat() {
       <div style={styles.sidebar}>
         <div style={styles.logo}>QendraKulturore</div>
         <nav style={styles.nav}>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
-          <button style={styles.navBtn} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
-          <button style={styles.navActive}>Biletat</button>
-        </nav>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
+  <button style={styles.navBtn} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
+  <button style={styles.navActive}>Biletat</button>
+  <div style={styles.navDivider} />
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=artistet')}>Artistët</button>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=ekspozitat')}>Ekspozitat</button>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=veprat')}>Veprat e Artit</button>
+</nav>
       </div>
 
       <div style={styles.main}>
@@ -281,4 +285,5 @@ const styles = {
   td:        { color: '#ddd', fontSize: 14, padding: '14px 16px' },
   empty:     { color: '#555', textAlign: 'center', padding: 40 },
   deleteBtn: { background: '#2d0000', color: '#f44336', border: '1px solid #f4433630', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12 },
+  navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
 };

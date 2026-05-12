@@ -1,0 +1,203 @@
+.crud-page {
+    background: transparent;
+    min-height: unset;
+    padding: 0;
+}
+
+.crud-title {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.crud-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.crud-form {
+    background: #1a1a1a;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.crud-form input,
+.crud-form select {
+    padding: 11px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #111;
+    color: #fff;
+}
+
+.crud-form input::placeholder {
+    color: #555;
+}
+
+.crud-form select option {
+    background: #111;
+    color: #fff;
+}
+
+.crud-form button {
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    background: #c8a96e;
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.crud-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.crud-card {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #222;
+    width: 320px;
+}
+
+.crud-card h3 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.crud-card p {
+    color: #888;
+    margin: 8px 0;
+}
+
+.crud-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.btn-edit {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+/* Pjesa e home */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-box {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 16px;
+    width: 420px;
+    max-width: 90%;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-box input,
+.modal-box textarea {
+    width: 100%;
+    padding: 11px;
+    margin-bottom: 12px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #111;
+    color: #fff;
+}
+
+.modal-box textarea {
+    min-height: 90px;
+}
+
+.public-section {
+    padding: 40px;
+    background: transparent;
+    font-family: Arial, sans-serif;
+}
+
+.section-title-home {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.section-divider {
+    border: none;
+    border-top: 2px solid #1f2937;
+    margin-bottom: 30px;
+}
+
+.ekspozita-imazhet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 35px;
+}
+
+.ekspozita-imazh-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    background: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ekspozita-imazh-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.13);
+}
+
+.ekspozita-imazh {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.ekspozita-imazh-label {
+    padding: 10px 14px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
