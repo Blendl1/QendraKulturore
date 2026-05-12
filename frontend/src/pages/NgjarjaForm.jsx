@@ -68,11 +68,16 @@ export default function NgjarjaForm() {
     <div style={styles.page}>
       <div style={styles.sidebar}>
         <div style={styles.logo}>QendraKulturore</div>
-        <nav style={styles.nav}>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
-          <button style={styles.navActive} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
-          <button style={styles.navBtn} onClick={() => navigate('/biletat')}>Biletat</button>
-        </nav>
+        // Ndrysho nav:
+<nav style={styles.nav}>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
+  <button style={styles.navActive} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
+  <button style={styles.navBtn} onClick={() => navigate('/biletat')}>Biletat</button>
+  <div style={styles.navDivider} />
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=artistet')}>Artistët</button>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=ekspozitat')}>Ekspozitat</button>
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=veprat')}>Veprat e Artit</button>
+</nav>
       </div>
 
       <div style={styles.main}>
@@ -192,4 +197,5 @@ const styles = {
   formFooter:{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 8 },
   cancelBtn: { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 8, padding: '10px 24px', cursor: 'pointer', fontSize: 14 },
   submitBtn: { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 8, padding: '10px 24px', cursor: 'pointer', fontWeight: 600, fontSize: 14 },
+  navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
 };

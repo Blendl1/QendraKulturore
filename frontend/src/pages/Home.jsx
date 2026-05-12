@@ -1,6 +1,8 @@
 import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import apiClient from '../api/apiClient';
+import PublicEkspozitat from '../components/PublicEkspozitat';
+import PublicVepratArtit from '../components/PublicVepratArtit';
 
 export default function Home(){
     const [ngjarjet, setNgjarjet] = useState([]);
@@ -25,18 +27,29 @@ export default function Home(){
         }
     }
 
-    return (
+  return (
     <div style={styles.page}>
+
         {/* NAVBAR */}
         <nav style={styles.nav}>
             <div style={styles.navLogo}>QendraKulturore</div>
+
             <div style={styles.navLinks}>
                 <span style={styles.navLink}>Ngjarjet</span>
+
+                <span
+                    style={styles.navLink}
+                    onClick={() => navigate('/artistet-public')}
+                >
+                    Artistët
+                </span>
+
                 <span style={styles.navLink}>Për Ne</span>
                 <span style={styles.navLink}>Kontakt</span>
-                <button 
+
+                <button
                     style={styles.navBtn}
-                    onClick={() => navigate('/user-login')}
+                    onClick={() => navigate('/login')}
                 >
                     Hyr
                 </button>
@@ -46,11 +59,13 @@ export default function Home(){
         {/* HERO SECTION */}
         <div style={styles.hero}>
             <p style={styles.heroSub}>Qendra Kulturore</p>
+
             <h1 style={styles.heroTitle}>
                 Ngjarjet & Aktivitetet
             </h1>
+
             <p style={styles.heroDesc}>
-                Zbuloni ngjarjet kulturore, koncertet, 
+                Zbuloni ngjarjet kulturore, koncertet,
                 shfaqjet teatrore dhe workshopet tona.
             </p>
         </div>
@@ -59,17 +74,18 @@ export default function Home(){
         <div style={styles.section}>
             <h2 style={styles.sectionTitle}>Ngjarjet e Ardhshme</h2>
 
-            {/* Show loading */}
             {loading && (
-                <p style={styles.loading}>Duke ngarkuar ngjarjet...</p>
+                <p style={styles.loading}>
+                    Duke ngarkuar ngjarjet...
+                </p>
             )}
 
-            {/* Show error */}
             {error && (
-                <p style={styles.error}>{error}</p>
+                <p style={styles.error}>
+                    {error}
+                </p>
             )}
 
-            {/* Show events grid */}
             {!loading && !error && (
                 <div style={styles.grid}>
                     {ngjarjet.length === 0 ? (
@@ -78,29 +94,34 @@ export default function Home(){
                         </p>
                     ) : (
                         ngjarjet.map(ngjarja => (
-                            <div 
-                                key={ngjarja.id} 
+                            <div
+                                key={ngjarja.id}
                                 style={styles.card}
                                 onClick={() => navigate(`/events/${ngjarja.id}`)}
                             >
                                 <div style={styles.cardType}>
                                     {ngjarja.lloji}
                                 </div>
+
                                 <h3 style={styles.cardTitle}>
                                     {ngjarja.titulli}
                                 </h3>
+
                                 <p style={styles.cardDesc}>
                                     {ngjarja.pershkrimi?.slice(0, 100)}...
                                 </p>
+
                                 <div style={styles.cardFooter}>
                                     <span style={styles.cardDate}>
                                         {new Date(ngjarja.dataFillimit)
                                             .toLocaleDateString('sq-AL')}
                                     </span>
+
                                     <span style={styles.cardPrice}>
-                                        €{ngjarja.cmimiBiletes}
+                                        EUR {ngjarja.cmimiBiletes}
                                     </span>
                                 </div>
+
                                 <button style={styles.cardBtn}>
                                     Shiko Detajet →
                                 </button>
@@ -111,10 +132,17 @@ export default function Home(){
             )}
         </div>
 
+        {/* PUBLIC EKSPOZITAT */}
+        <PublicEkspozitat />
+
+        {/* PUBLIC VEPRAT E ARTIT */}
+        <PublicVepratArtit />
+
         {/* FOOTER */}
         <footer style={styles.footer}>
             <p style={styles.footerText}>
-                © 2025 QendraKulturore. Të gjitha të drejtat e rezervuara.
+                © 2025 QendraKulturore.
+                Të gjitha të drejtat e rezervuara.
             </p>
         </footer>
     </div>
