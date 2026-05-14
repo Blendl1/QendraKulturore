@@ -7,6 +7,7 @@ function VepratArtit() {
     const [veprat, setVeprat] = useState([]);
     const [vepraData, setVepraData] = useState(emptyForm);
     const [editing, setEditing] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [search, setSearch] = useState('');
     const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -26,12 +27,14 @@ function VepratArtit() {
         );
         setVepraData(emptyForm);
         setEditing(false);
+        setShowForm(false);
         fetchData();
     };
 
     const editVepra = (v) => {
         setVepraData({ id: v.id, titulli: v.titulli || '', materiali: v.materiali || '', viti: v.viti || 2026, vlera: v.vlera || 0, artistiId: v.artistiID || v.artistiId || '' });
         setEditing(true);
+        setShowForm(true);
     };
 
     const deleteVepra = async () => {
@@ -47,45 +50,85 @@ function VepratArtit() {
         v.artisti?.mbiemri?.toLowerCase().includes(search.toLowerCase())
     );
 
+    // ── FORMA E PLOTË (si ngjarjet) ──
+    if (showForm) {
+        return (
+            <div style={pageStyle}>
+                <div style={headerStyle}>
+                    <h1 style={headerTitle}>{editing ? 'Ndrysho Veprën e Artit' : 'Shto Vepër Arti të Re'}</h1>
+                    <button style={btnBack} onClick={() => { setShowForm(false); setEditing(false); setVepraData(emptyForm); }}>← Kthehu</button>
+                </div>
+
+                <div style={formBox}>
+                    <form onSubmit={handleSubmit}>
+                        <div style={rowStyle}>
+                            <div style={fieldStyle}>
+                                <label style={labelStyle}>Titulli *</label>
+                                <input style={inputStyle} value={vepraData.titulli} onChange={e => setVepraData({ ...vepraData, titulli: e.target.value })} required />
+                            </div>
+                            <div style={fieldStyle}>
+                                <label style={labelStyle}>Materiali *</label>
+                                <input style={inputStyle} value={vepraData.materiali} onChange={e => setVepraData({ ...vepraData, materiali: e.target.value })} required />
+                            </div>
+                        </div>
+                        <div style={rowStyle}>
+                            <div style={fieldStyle}>
+                                <label style={labelStyle}>Viti i Krijimit *</label>
+                                <input style={inputStyle} type="number" value={vepraData.viti} onChange={e => setVepraData({ ...vepraData, viti: e.target.value })} required />
+                            </div>
+                            <div style={fieldStyle}>
+                                <label style={labelStyle}>Vlera (EUR)</label>
+                                <input style={inputStyle} type="number" value={vepraData.vlera} onChange={e => setVepraData({ ...vepraData, vlera: e.target.value })} />
+                            </div>
+                        </div>
+                        <div style={rowStyle}>
+                            <div style={fieldStyle}>
+                                <label style={labelStyle}>Artisti *</label>
+                                <select style={inputStyle} value={vepraData.artistiId} onChange={e => setVepraData({ ...vepraData, artistiId: e.target.value })} required>
+                                    <option value="">Zgjidh Artistin</option>
+                                    {artistet.map(a => (
+                                        <option key={a.id} value={a.id}>{a.emri} {a.mbiemri}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div style={fieldStyle}>
+                                {/* kolona e dytë rezervë */}
+                            </div>
+                        </div>
+                        <div style={actionsStyle}>
+                            <button type="button" style={btnCancelStyle} onClick={() => { setShowForm(false); setEditing(false); setVepraData(emptyForm); }}>Anulo</button>
+                            <button type="submit" style={btnSubmitStyle}>{editing ? 'Përditëso Veprën' : 'Krijo Veprën'}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+
+    // ── LISTA ──
     return (
         <div className="crud-page">
-            <h2 className="crud-title">Veprat e Artit</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <h2 className="crud-title" style={{ margin: 0 }}>Veprat e Artit</h2>
+                <button style={btnAddStyle} onClick={() => { setVepraData(emptyForm); setEditing(false); setShowForm(true); }}>+ Shto Vepër</button>
+            </div>
 
             <input style={searchStyle} placeholder="Kërko vepër arti..." value={search} onChange={e => setSearch(e.target.value)} />
 
-            <div className="crud-layout">
-                <form className="crud-form" onSubmit={handleSubmit}>
-                    <input placeholder="Titulli" value={vepraData.titulli} onChange={e => setVepraData({ ...vepraData, titulli: e.target.value })} />
-                    <input placeholder="Materiali" value={vepraData.materiali} onChange={e => setVepraData({ ...vepraData, materiali: e.target.value })} />
-                    <input type="number" placeholder="Viti" value={vepraData.viti} onChange={e => setVepraData({ ...vepraData, viti: e.target.value })} />
-                    <input type="number" placeholder="Vlera" value={vepraData.vlera} onChange={e => setVepraData({ ...vepraData, vlera: e.target.value })} />
-                    <select value={vepraData.artistiId} onChange={e => setVepraData({ ...vepraData, artistiId: e.target.value })}>
-                        <option value="">Zgjidh Artistin</option>
-                        {artistet.map(a => (
-                            <option key={a.id} value={a.id}>{a.emri} {a.mbiemri}</option>
-                        ))}
-                    </select>
-                    <button type="submit">{editing ? 'Përditëso' : 'Shto'}</button>
-                    {editing && (
-                        <button type="button" className="btn-cancel" onClick={() => { setVepraData(emptyForm); setEditing(false); }}>Anulo</button>
-                    )}
-                </form>
-
-                <div className="crud-list">
-                    {filtered.map(v => (
-                        <div key={v.id} className="crud-card">
-                            <h3>{v.titulli}</h3>
-                            <p>Materiali: {v.materiali}</p>
-                            <p>Viti: {v.viti}</p>
-                            <p>Vlera: {v.vlera} EUR</p>
-                            <p>Artisti: {v.artisti?.emri} {v.artisti?.mbiemri}</p>
-                            <div className="crud-actions">
-                                <button className="btn-edit" onClick={() => editVepra(v)}>Edit</button>
-                                <button className="btn-delete" onClick={() => setConfirmDelete(v.id)}>Delete</button>
-                            </div>
+            <div className="crud-list">
+                {filtered.map(v => (
+                    <div key={v.id} className="crud-card">
+                        <h3>{v.titulli}</h3>
+                        <p>Materiali: {v.materiali}</p>
+                        <p>Viti: {v.viti}</p>
+                        <p>Vlera: {v.vlera} EUR</p>
+                        <p>Artisti: {v.artisti?.emri} {v.artisti?.mbiemri}</p>
+                        <div className="crud-actions">
+                            <button className="btn-edit" onClick={() => editVepra(v)}>Edit</button>
+                            <button className="btn-delete" onClick={() => setConfirmDelete(v.id)}>Delete</button>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
 
             {confirmDelete && (
@@ -104,6 +147,21 @@ function VepratArtit() {
         </div>
     );
 }
+
+// ── STYLES ──
+const pageStyle = { minHeight: '100vh', background: '#0d0d0d', color: '#e8e8e8' };
+const headerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 32px', borderBottom: '1px solid #222' };
+const headerTitle = { fontSize: 26, fontWeight: 700, color: '#fff', margin: 0, fontFamily: 'Georgia, serif' };
+const btnBack = { background: '#1a1a1a', border: '1px solid #333', color: '#ccc', padding: '8px 18px', borderRadius: 8, cursor: 'pointer', fontSize: 14 };
+const btnAddStyle = { background: '#c9a84c', border: 'none', color: '#111', padding: '10px 20px', borderRadius: 8, cursor: 'pointer', fontSize: 14, fontWeight: 700 };
+const formBox = { margin: '28px 32px', background: '#161616', border: '1px solid #252525', borderRadius: 12, padding: '28px 32px' };
+const rowStyle = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 };
+const fieldStyle = { display: 'flex', flexDirection: 'column', gap: 6 };
+const labelStyle = { fontSize: 12, color: '#999', letterSpacing: '0.4px', fontFamily: 'sans-serif' };
+const inputStyle = { background: '#0f0f0f', border: '1px solid #2a2a2a', color: '#e8e8e8', padding: '10px 14px', borderRadius: 6, fontSize: 14, fontFamily: 'sans-serif', outline: 'none', width: '100%', boxSizing: 'border-box' };
+const actionsStyle = { display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 8 };
+const btnCancelStyle = { background: 'transparent', border: '1px solid #333', color: '#aaa', padding: '10px 24px', borderRadius: 6, cursor: 'pointer', fontSize: 14, fontFamily: 'sans-serif' };
+const btnSubmitStyle = { background: '#c9a84c', border: 'none', color: '#111', padding: '10px 26px', borderRadius: 6, cursor: 'pointer', fontSize: 14, fontWeight: 700, fontFamily: 'sans-serif' };
 
 const searchStyle = { background: '#111', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, width: 300, marginBottom: 24, display: 'block' };
 const modalOverlay = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 };
