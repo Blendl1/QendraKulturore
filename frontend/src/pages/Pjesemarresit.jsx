@@ -36,84 +36,66 @@ export default function Pjesemarresit() {
   );
 
   return (
-    <div style={styles.page}>
-      <div style={styles.sidebar}>
-        <div style={styles.logo}>QendraKulturore</div>
-        <nav style={styles.nav}>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
-          <button style={styles.navBtn} onClick={() => navigate('/workshopet')}>Workshopet</button>
-          <button style={styles.navActive}>Pjesemarresit</button>
-          <button style={styles.navBtn} onClick={() => navigate('/regjistrimet')}>Regjistrimet</button>
-        </nav>
+    <div style={styles.main}>
+      <div style={styles.header}>
+        <h1 style={styles.pageTitle}>Pjesëmarrësit</h1>
+        <button style={styles.addBtn} onClick={() => navigate('/pjesemarresit/create')}>
+          + Shto Pjesëmarrës
+        </button>
       </div>
 
-      <div style={styles.main}>
-        <div style={styles.header}>
-          <h1 style={styles.pageTitle}>Pjesëmarrësit</h1>
-          <button style={styles.addBtn} onClick={() => navigate('/pjesemarresit/create')}>
-            + Shto Pjesëmarrës
-          </button>
-        </div>
+      <div style={styles.filters}>
+        <input
+          style={styles.search}
+          placeholder="Kërko pjesëmarrës..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
 
-        <div style={styles.filters}>
-          <input
-            style={styles.search}
-            placeholder="Kërko pjesëmarrës..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-
-        {loading ? (
-          <div style={styles.loading}>Duke ngarkuar...</div>
-        ) : (
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr style={styles.thead}>
-                  <th style={styles.th}>Emri</th>
-                  <th style={styles.th}>Mbiemri</th>
-                  <th style={styles.th}>Email</th>
-                  <th style={styles.th}>Telefoni</th>
-                  <th style={styles.th}>Data Regjistrimit</th>
-                  <th style={styles.th}>Veprime</th>
+      {loading ? (
+        <div style={styles.loading}>Duke ngarkuar...</div>
+      ) : (
+        <div style={styles.tableWrap}>
+          <table style={styles.table}>
+            <thead>
+              <tr style={styles.thead}>
+                <th style={styles.th}>Emri</th>
+                <th style={styles.th}>Mbiemri</th>
+                <th style={styles.th}>Email</th>
+                <th style={styles.th}>Telefoni</th>
+                <th style={styles.th}>Data Regjistrimit</th>
+                <th style={styles.th}>Veprime</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(p => (
+                <tr key={p.id} style={styles.tr}>
+                  <td style={styles.td}>{p.emri}</td>
+                  <td style={styles.td}>{p.mbiemri}</td>
+                  <td style={styles.td}>{p.email}</td>
+                  <td style={styles.td}>{p.telefoni}</td>
+                  <td style={styles.td}>{new Date(p.dataRegjistrimit).toLocaleDateString('sq-AL')}</td>
+                  <td style={styles.td}>
+                    <div style={styles.actions}>
+                      <button style={styles.editBtn} onClick={() => navigate(`/pjesemarresit/${p.id}`)}>Ndrysho</button>
+                      <button style={styles.deleteBtn} onClick={() => handleDelete(p.id)}>Fshi</button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtered.map(p => (
-                  <tr key={p.id} style={styles.tr}>
-                    <td style={styles.td}>{p.emri}</td>
-                    <td style={styles.td}>{p.mbiemri}</td>
-                    <td style={styles.td}>{p.email}</td>
-                    <td style={styles.td}>{p.telefoni}</td>
-                    <td style={styles.td}>{new Date(p.dataRegjistrimit).toLocaleDateString('sq-AL')}</td>
-                    <td style={styles.td}>
-                      <div style={styles.actions}>
-                        <button style={styles.editBtn} onClick={() => navigate(`/pjesemarresit/${p.id}`)}>Ndrysho</button>
-                        <button style={styles.deleteBtn} onClick={() => handleDelete(p.id)}>Fshi</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr><td colSpan={6} style={styles.empty}>Nuk u gjetën pjesëmarrës.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+              ))}
+              {filtered.length === 0 && (
+                <tr><td colSpan={6} style={styles.empty}>Nuk u gjetën pjesëmarrës.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
 
 const styles = {
-  page:      { display: 'flex', minHeight: '100vh', background: '#0a0a0a' },
-  sidebar:   { width: 220, background: '#111', borderRight: '1px solid #222', display: 'flex', flexDirection: 'column', padding: '24px 0' },
-  logo:      { color: '#c8a96e', fontWeight: 700, fontSize: 16, padding: '0 24px 32px' },
-  nav:       { display: 'flex', flexDirection: 'column', gap: 4, padding: '0 12px', flex: 1 },
-  navBtn:    { background: 'none', border: 'none', color: '#888', padding: '10px 12px', borderRadius: 8, textAlign: 'left', cursor: 'pointer', fontSize: 14 },
-  navActive: { background: '#1a1a1a', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 8, textAlign: 'left', cursor: 'pointer', fontSize: 14, fontWeight: 600 },
   main:      { flex: 1, padding: '32px 40px', overflowY: 'auto' },
   header:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
   pageTitle: { color: '#fff', fontSize: 28, fontWeight: 700, margin: 0 },
