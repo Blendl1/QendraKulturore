@@ -3,28 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ngjarjetApi } from '../api/ngjarjetApi';
 import { biletatApi } from '../api/biletatApi';
+import { workshopApi, pjesemarresApi, regjistrimApi } from '../api/workshopApi';
 import Artistet from '../components/Artistet';
 import Ekspozitat from '../components/Ekspozitat';
 import VepratArtit from '../components/VepratArtit';
+import Workshopet from './Workshopet';
+import Pjesemarresit from './Pjesemarresit';
+import Regjistrimet from './Regjistrimet';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [ngjarjet, setNgjarjet] = useState([]);
-  const [biletat, setBiletat]   = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const [biletat, setBiletat] = useState([]);
+  const [workshopet, setWorkshopet] = useState([]);
+  const [pjesemarresit, setPjesemarresit] = useState([]);
+  const [regjistrimet, setRegjistrimet] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState('dashboard');
 
   useEffect(() => { loadData(); }, []);
 
   const loadData = async () => {
     try {
-      const [n, b] = await Promise.all([
+      const [n, b, w, p, r] = await Promise.all([
         ngjarjetApi.getAll(),
         biletatApi.getAll(),
+        workshopApi.getAll(),
+        pjesemarresApi.getAll(),
+        regjistrimApi.getAll(),
       ]);
       setNgjarjet(n.data);
       setBiletat(b.data);
+      setWorkshopet(w.data);
+      setPjesemarresit(p.data);
+      setRegjistrimet(r.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -41,59 +54,39 @@ export default function Dashboard() {
   const totalAttendees = biletat.length;
   const activeEvents   = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
   const totalEvents    = ngjarjet.length;
+  const totalWorkshopet     = workshopet.length;
+  const activeWorkshopet    = workshopet.filter(w => w.statusi === 'Aktiv').length;
+  const totalPjesemarresit  = pjesemarresit.length;
+  const totalRegjistrimet   = regjistrimet.length;
 
   return (
     <div style={styles.page}>
-      {/* Sidebar */}
       <div style={styles.sidebar}>
         <div style={styles.logo}>QendraKulturore</div>
         <nav style={styles.nav}>
-
-          <button
-            style={activePage === 'dashboard' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('dashboard')}
-          >Dashboard</button>
-
-          <button
-            style={styles.navBtn}
-            onClick={() => navigate('/ngjarjet')}
-          >Ngjarjet</button>
-
-          <button
-            style={styles.navBtn}
-            onClick={() => navigate('/biletat')}
-          >Biletat</button>
-
+          <button style={activePage === 'dashboard' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('dashboard')}>Dashboard</button>
+          <button style={styles.navBtn} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
+          <button style={styles.navBtn} onClick={() => navigate('/biletat')}>Biletat</button>
           <div style={styles.navDivider} />
-
-          <button
-            style={activePage === 'artistet' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('artistet')}
-          >Artistët</button>
-
-          <button
-            style={activePage === 'ekspozitat' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('ekspozitat')}
-          >Ekspozitat</button>
-
-          <button
-            style={activePage === 'veprat' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('veprat')}
-          >Veprat e Artit</button>
-
+          <button style={activePage === 'artistet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('artistet')}>Artistët</button>
+          <button style={activePage === 'ekspozitat' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('ekspozitat')}>Ekspozitat</button>
+          <button style={activePage === 'veprat' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('veprat')}>Veprat e Artit</button>
+          <div style={styles.navDivider} />
+          <button style={activePage === 'workshopet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('workshopet')}>Workshopet</button>
+          <button style={activePage === 'pjesemarresit' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('pjesemarresit')}>Pjesëmarrësit</button>
+          <button style={activePage === 'regjistrimet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('regjistrimet')}>Regjistrimet</button>
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
       </div>
 
-      {/* Main content */}
       <div style={styles.main}>
+        {activePage === 'artistet'      && <Artistet />}
+        {activePage === 'ekspozitat'    && <Ekspozitat />}
+        {activePage === 'veprat'        && <VepratArtit />}
+        {activePage === 'workshopet'    && <Workshopet />}
+        {activePage === 'pjesemarresit' && <Pjesemarresit />}
+        {activePage === 'regjistrimet'  && <Regjistrimet />}
 
-        {/* CRUD pages */}
-        {activePage === 'artistet'   && <Artistet />}
-        {activePage === 'ekspozitat' && <Ekspozitat />}
-        {activePage === 'veprat'     && <VepratArtit />}
-
-        {/* Dashboard page */}
         {activePage === 'dashboard' && (
           <>
             <div style={styles.header}>
@@ -106,20 +99,21 @@ export default function Dashboard() {
             ) : (
               <>
                 <div style={styles.grid4}>
-                  <MetricCard label="Ngjarje Gjithsej"  value={totalEvents}    color="#c8a96e" />
-                  <MetricCard label="Ngjarje Aktive"     value={activeEvents}   color="#4caf50" />
-                  <MetricCard label="Bileta të Shitura"  value={totalAttendees} color="#2196f3" />
-                  <MetricCard label="Të Ardhura (€)"     value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                  <MetricCard label="Ngjarje Gjithsej"     value={totalEvents}          color="#c8a96e" />
+                  <MetricCard label="Ngjarje Aktive"        value={activeEvents}         color="#4caf50" />
+                  <MetricCard label="Bileta të Shitura"     value={totalAttendees}       color="#2196f3" />
+                  <MetricCard label="Të Ardhura (€)"        value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                  <MetricCard label="Workshopet Gjithsej"   value={totalWorkshopet}      color="#c8a96e" />
+                  <MetricCard label="Workshopet Aktive"     value={activeWorkshopet}     color="#4caf50" />
+                  <MetricCard label="Pjesëmarrësit"         value={totalPjesemarresit}   color="#2196f3" />
+                  <MetricCard label="Regjistrimet"          value={totalRegjistrimet}    color="#ff9800" />
                 </div>
 
                 <div style={styles.section}>
                   <div style={styles.sectionHeader}>
                     <h2 style={styles.sectionTitle}>Ngjarjet e Fundit</h2>
-                    <button style={styles.addBtn} onClick={() => navigate('/ngjarjet/create')}>
-                      + Shto Ngjarje
-                    </button>
+                    <button style={styles.addBtn} onClick={() => navigate('/ngjarjet/create')}>+ Shto Ngjarje</button>
                   </div>
-
                   <table style={styles.table}>
                     <thead>
                       <tr style={styles.thead}>
@@ -140,14 +134,44 @@ export default function Dashboard() {
                           <td style={styles.td}><StatusBadge status={n.statusi} /></td>
                           <td style={styles.td}>€{n.cmimiBiletes?.toLocaleString()}</td>
                           <td style={styles.td}>
-                            <button style={styles.editBtn} onClick={() => navigate(`/ngjarjet/${n.id}`)}>
-                              Detajet
-                            </button>
+                            <button style={styles.editBtn} onClick={() => navigate(`/ngjarjet/${n.id}`)}>Detajet</button>
                           </td>
                         </tr>
                       ))}
                       {ngjarjet.length === 0 && (
                         <tr><td colSpan={6} style={styles.empty}>Nuk ka ngjarje ende.</td></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style={{ ...styles.section, marginTop: 24 }}>
+                  <div style={styles.sectionHeader}>
+                    <h2 style={styles.sectionTitle}>Workshopet e Fundit</h2>
+                    <button style={styles.addBtn} onClick={() => setActivePage('workshopet')}>+ Shto Workshop</button>
+                  </div>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr style={styles.thead}>
+                        <th style={styles.th}>Titulli</th>
+                        <th style={styles.th}>Data</th>
+                        <th style={styles.th}>Kapaciteti</th>
+                        <th style={styles.th}>Statusi</th>
+                        <th style={styles.th}>Çmimi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {workshopet.slice(0, 5).map(w => (
+                        <tr key={w.id} style={styles.tr}>
+                          <td style={styles.td}>{w.titulli}</td>
+                          <td style={styles.td}>{new Date(w.dataFillimit).toLocaleDateString('sq-AL')}</td>
+                          <td style={styles.td}>{w.kapaciteti}</td>
+                          <td style={styles.td}><StatusBadge status={w.statusi} /></td>
+                          <td style={styles.td}>€{w.cmimi?.toLocaleString()}</td>
+                        </tr>
+                      ))}
+                      {workshopet.length === 0 && (
+                        <tr><td colSpan={5} style={styles.empty}>Nuk ka workshop ende.</td></tr>
                       )}
                     </tbody>
                   </table>
@@ -174,7 +198,7 @@ function StatusBadge({ status }) {
   const colors = {
     Aktiv:       { bg: '#1a3a1a', color: '#4caf50' },
     Planifikuar: { bg: '#1a1a3a', color: '#2196f3' },
-    Perfunduar:  { bg: '#2a2a2a', color: '#888'    },
+    Perfunduar:  { bg: '#2a2a2a', color: '#888' },
     Anuluar:     { bg: '#3a1a1a', color: '#f44336' },
   };
   const c = colors[status] || colors.Planifikuar;
@@ -214,5 +238,4 @@ const styles = {
   td:           { color: '#ddd', fontSize: 14, padding: '12px' },
   empty:        { color: '#555', textAlign: 'center', padding: 32 },
   editBtn:      { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 },
-  navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
 };
