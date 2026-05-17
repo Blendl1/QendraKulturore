@@ -34,6 +34,7 @@ namespace backend.Controllers
             return Ok(p);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<Pjesemarres>> Create([FromBody] Pjesemarres pjesemarres)
         {

@@ -12,7 +12,6 @@ namespace backend.Controllers
     public class RegjistrimWorkshopController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
         public RegjistrimWorkshopController(ApplicationDbContext context)
         {
             _context = context;
@@ -40,9 +39,13 @@ namespace backend.Controllers
             return Ok(r);
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<RegjistrimWorkshop>> Create([FromBody] RegjistrimWorkshop regjistrim)
+        public async Task<IActionResult> Create([FromBody] RegjistrimWorkshop regjistrim)
         {
+            if (regjistrim.WorkshopId == 0 || regjistrim.PjesemarresId == 0)
+                return BadRequest("WorkshopId dhe PjesemarresId janë të detyrueshme.");
+
             var workshop = await _context.Workshopet.FindAsync(regjistrim.WorkshopId);
             if (workshop == null) return BadRequest("Workshop nuk ekziston.");
 
@@ -58,10 +61,18 @@ namespace backend.Controllers
 
             if (duplikat) return BadRequest("Ky pjesëmarrës është i regjistruar tashmë.");
 
-            regjistrim.DataRegjistrimit = DateTime.UtcNow;
-            _context.RegjistrimetWorkshop.Add(regjistrim);
+            var regjistrimRi = new RegjistrimWorkshop
+            {
+                WorkshopId = regjistrim.WorkshopId,
+                PjesemarresId = regjistrim.PjesemarresId,
+                Statusi = regjistrim.Statusi ?? "Aktiv",
+                EshtePaguar = regjistrim.EshtePaguar,
+                DataRegjistrimit = DateTime.UtcNow,
+            };
+
+            _context.RegjistrimetWorkshop.Add(regjistrimRi);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = regjistrim.Id }, regjistrim);
+            return Ok(regjistrimRi);
         }
 
         [HttpPut("{id}")]
