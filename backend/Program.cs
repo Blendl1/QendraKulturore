@@ -95,6 +95,29 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+using (var scope = app.Services.CreateScope())
+{
+	var userManager = scope.ServiceProvider
+		.GetRequiredService<UserManager<AppUser>>();
+
+	const string adminEmail = "blend@gmail.com";
+	const string adminPassword = "12345678";
+
+	if (await userManager.FindByEmailAsync(adminEmail) == null)
+	{
+		var admin = new AppUser
+		{
+			FullName = "Admin",
+			Email = adminEmail,
+			UserName = adminEmail
+		};
+		var result = await userManager.CreateAsync(admin, adminPassword);
+		if (result.Succeeded)
+			await userManager.AddToRoleAsync(admin, "Admin");
+	}
+}
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

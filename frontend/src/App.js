@@ -12,17 +12,28 @@ import Ekspozitat from './components/Ekspozitat';
 import VepratArtit from './components/VepratArtit';
 import PublicArtistet from './components/PublicArtistet';
 import PublicVepratArtit from './components/PublicVepratArtit';
+import Register from './pages/Register';
 import Workshopet from './pages/Workshopet';
 import WorkshopForm from './pages/WorkshopForm';
 import Pjesemarresit from './pages/Pjesemarresit';
 import PjesemarresForm from './pages/PjesemarresForm';
 import Regjistrimet from './pages/Regjistrimet';
 import RegjistrimForm from './pages/RegjistrimForm';
+import PerNe from './pages/PerNe';
+import Kontakt from './pages/Kontakt';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div style={{ color: '#fff', padding: 40 }}>Duke ngarkuar...</div>;
   return user ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div style={{ color: '#fff', padding: 40 }}>Duke ngarkuar...</div>;
+  if (!user) return <Navigate to="/login" />;
+  if (!user.roles?.includes('Admin')) return <Navigate to="/home" />;
+  return children;
 }
 
 function App() {
@@ -33,9 +44,12 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/events/:id" element={<EventDetail />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/artistet-public" element={<PublicArtistet />} />
+          <Route path="/per-ne" element={<PerNe />} />
+          <Route path="/kontakt" element={<Kontakt />} />
 
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
           <Route path="/artistet" element={<PrivateRoute><Artistet /></PrivateRoute>} />
           <Route path="/ekspozitat" element={<PrivateRoute><Ekspozitat /></PrivateRoute>} />
           <Route path="/veprat-artit" element={<PrivateRoute><VepratArtit /></PrivateRoute>} />
