@@ -81,6 +81,13 @@ export default function Dashboard() {
             onClick={() => setActivePage('veprat')}
           >Veprat e Artit</button>
 
+          <div style={styles.navDivider} />
+
+          <button
+            style={activePage === 'users' ? styles.navActive : styles.navBtn}
+            onClick={() => setActivePage('users')}
+          >Përdoruesit</button>
+
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
       </div>
@@ -90,6 +97,7 @@ export default function Dashboard() {
 
         {/* CRUD pages */}
         {activePage === 'artistet'   && <Artistet />}
+        {activePage === 'users' && <UsersList />}
         {activePage === 'ekspozitat' && <Ekspozitat />}
         {activePage === 'veprat'     && <VepratArtit />}
 
@@ -216,3 +224,47 @@ const styles = {
   editBtn:      { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 },
   navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
 };
+
+function UsersList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    fetch(`${process.env.REACT_APP_API_URL}/api/Users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.json())
+      .then(data => { setUsers(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div style={{ color: '#888', padding: 40 }}>Duke ngarkuar...</div>;
+
+  return (
+    <div style={styles.section}>
+      <h2 style={{ color: '#fff', marginBottom: 20 }}>Përdoruesit</h2>
+      <table style={styles.table}>
+        <thead>
+          <tr style={styles.thead}>
+            <th style={styles.th}>Emri</th>
+            <th style={styles.th}>Email</th>
+            <th style={styles.th}>Roli</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map(u => (
+            <tr key={u.id} style={styles.tr}>
+              <td style={styles.td}>{u.fullName}</td>
+              <td style={styles.td}>{u.email}</td>
+              <td style={styles.td}>{u.roles?.join(', ')}</td>
+            </tr>
+          ))}
+          {users.length === 0 && (
+            <tr><td colSpan={3} style={styles.empty}>Nuk ka përdorues.</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
