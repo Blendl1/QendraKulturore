@@ -50,10 +50,10 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  const totalRevenue   = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
-  const totalAttendees = biletat.length;
-  const activeEvents   = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
-  const totalEvents    = ngjarjet.length;
+  const totalRevenue        = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
+  const totalAttendees      = biletat.length;
+  const activeEvents        = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
+  const totalEvents         = ngjarjet.length;
   const totalWorkshopet     = workshopet.length;
   const activeWorkshopet    = workshopet.filter(w => w.statusi === 'Aktiv').length;
   const totalPjesemarresit  = pjesemarresit.length;
@@ -75,6 +75,8 @@ export default function Dashboard() {
           <button style={activePage === 'workshopet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('workshopet')}>Workshopet</button>
           <button style={activePage === 'pjesemarresit' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('pjesemarresit')}>Pjesëmarrësit</button>
           <button style={activePage === 'regjistrimet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('regjistrimet')}>Regjistrimet</button>
+          <div style={styles.navDivider} />
+          <button style={activePage === 'users' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('users')}>Përdoruesit</button>
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
       </div>
@@ -86,6 +88,7 @@ export default function Dashboard() {
         {activePage === 'workshopet'    && <Workshopet />}
         {activePage === 'pjesemarresit' && <Pjesemarresit />}
         {activePage === 'regjistrimet'  && <Regjistrimet />}
+        {activePage === 'users'         && <UsersList />}
 
         {activePage === 'dashboard' && (
           <>
@@ -239,3 +242,47 @@ const styles = {
   empty:        { color: '#555', textAlign: 'center', padding: 32 },
   editBtn:      { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 },
 };
+
+function UsersList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    fetch(`${process.env.REACT_APP_API_URL}/api/Users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.json())
+      .then(data => { setUsers(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div style={{ color: '#888', padding: 40 }}>Duke ngarkuar...</div>;
+
+  return (
+    <div style={styles.section}>
+      <h2 style={{ color: '#fff', marginBottom: 20 }}>Përdoruesit</h2>
+      <table style={styles.table}>
+        <thead>
+          <tr style={styles.thead}>
+            <th style={styles.th}>Emri</th>
+            <th style={styles.th}>Email</th>
+            <th style={styles.th}>Roli</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map(u => (
+            <tr key={u.id} style={styles.tr}>
+              <td style={styles.td}>{u.fullName}</td>
+              <td style={styles.td}>{u.email}</td>
+              <td style={styles.td}>{u.roles?.join(', ')}</td>
+            </tr>
+          ))}
+          {users.length === 0 && (
+            <tr><td colSpan={3} style={styles.empty}>Nuk ka përdorues.</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
