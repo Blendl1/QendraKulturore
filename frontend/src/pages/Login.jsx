@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -64,6 +64,11 @@ export default function Login() {
             {loading ? 'Duke hyrë...' : 'Hyr'}
           </button>
         </form>
+
+        <p style={styles.registerText}>
+          Nuk ke llogari?{' '}
+          <Link to="/register" style={styles.registerLink}>Regjistrohu këtu</Link>
+        </p>
       </div>
     </div>
   );
@@ -137,5 +142,17 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     marginTop: 8,
+  },
+  registerText: {
+    color: '#888',
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 0,
+  },
+  registerLink: {
+    color: '#c8a96e',
+    textDecoration: 'none',
+    fontWeight: 600,
   },
 };
