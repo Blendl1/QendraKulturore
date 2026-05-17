@@ -56,10 +56,8 @@ function PublicWorkshopet() {
         setMesazhi('');
         try {
             let pjesemarresId = null;
-
             const pRes = await apiClient.get('/Pjesemarres');
             const ekziston = pRes.data.find(p => p.email === user.email);
-
             if (ekziston) {
                 pjesemarresId = ekziston.id;
             } else {
@@ -71,24 +69,33 @@ function PublicWorkshopet() {
                 });
                 pjesemarresId = krijuar.data.id;
             }
-
             await apiClient.post('/RegjistrimWorkshop', {
                 workshopId: selected.id,
                 pjesemarresId: pjesemarresId,
                 statusi: 'Aktiv',
                 eshtePaguar: false,
             });
-
             const res2 = await apiClient.get('/RegjistrimWorkshop');
             setRegjistrime(res2.data);
             const count = res2.data.filter(r => r.workshopId === selected.id && r.statusi === 'Aktiv').length;
             setNumPjesemarresish(count);
             setMesazhi('U regjistruat me sukses!');
         } catch (err) {
-            setMesazhi(err.response?.data || 'Gabim gjatë regjistrimit.');
+            const errData = err.response?.data;
+            setMesazhi(typeof errData === 'string' ? errData : 'Gabim gjatë regjistrimit.');
         } finally {
             setDukeRegjistruar(false);
         }
+    };
+
+    const getMesazhiColor = () => {
+        if (typeof mesazhi !== 'string') return '#c62828';
+        return mesazhi.includes('sukses') ? '#16a34a' : '#c62828';
+    };
+
+    const getMesazhiText = () => {
+        if (typeof mesazhi !== 'string') return 'Gabim gjatë regjistrimit.';
+        return mesazhi;
     };
 
     return (
@@ -176,9 +183,9 @@ function PublicWorkshopet() {
                                 </p>
                             </div>
 
-                            {mesazhi && (
-                                <p style={{ ...styles.mesazhi, color: mesazhi.includes('sukses') ? '#16a34a' : '#c62828' }}>
-                                    {mesazhi}
+                            {mesazhi !== '' && (
+                                <p style={{ ...styles.mesazhi, color: getMesazhiColor(), borderLeftColor: getMesazhiColor() }}>
+                                    {getMesazhiText()}
                                 </p>
                             )}
 
