@@ -98,22 +98,6 @@ export default function Sallat() {
 
   return (
     <div style={styles.page}>
-      {/* Sidebar */}
-      <div style={styles.sidebar}>
-        <div style={styles.logo}>QendraKulturore</div>
-        <nav style={styles.nav}>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Dashboard</button>
-          <button style={styles.navBtn} onClick={() => navigate('/ngjarjet')}>Ngjarjet</button>
-          <button style={styles.navBtn} onClick={() => navigate('/biletat')}>Biletat</button>
-          <button style={styles.navActive}>Sallat</button>
-          <div style={styles.navDivider} />
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=artistet')}>Artistët</button>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=ekspozitat')}>Ekspozitat</button>
-          <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=veprat')}>Veprat e Artit</button>
-        </nav>
-      </div>
-
-      {/* Main Content */}
       <div style={styles.main}>
         <div style={styles.header}>
           <h1 style={styles.pageTitle}>Sallat & Ambientet</h1>
@@ -164,26 +148,18 @@ export default function Sallat() {
                     <td style={styles.td}>{s.emri}</td>
                     <td style={styles.td}>Kati {s.kati}</td>
                     <td style={styles.td}>{s.pajisjet || 'Nuk ka pajisje'}</td>
-                    <td style={styles.td}>
-                      <StatusBadge status={s.statusi} />
-                    </td>
+                    <td style={styles.td}><StatusBadge status={s.statusi} /></td>
                     <td style={styles.td}>
                       <div style={styles.actions}>
-                        <button style={styles.editBtn} onClick={() => handleEdit(s)}>
-                          Ndrysho
-                        </button>
-                        <button style={styles.deleteBtn} onClick={() => handleDelete(s.id)}>
-                          Fshi
-                        </button>
+                        <button style={styles.editBtn} onClick={() => handleEdit(s)}>Ndrysho</button>
+                        <button style={styles.deleteBtn} onClick={() => handleDelete(s.id)}>Fshi</button>
                       </div>
                     </td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={6} style={styles.empty}>
-                      Nuk u gjetën salla të regjistruara.
-                    </td>
+                    <td colSpan={6} style={styles.empty}>Nuk u gjetën salla të regjistruara.</td>
                   </tr>
                 )}
               </tbody>
@@ -192,7 +168,7 @@ export default function Sallat() {
         )}
       </div>
 
-      {/* POP-UP MODAL FORMA */}
+      {/* MODAL */}
       {showModal && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalCard}>
@@ -200,28 +176,12 @@ export default function Sallat() {
             <form onSubmit={handleSubmit} style={styles.form}>
               <div style={styles.formGroup}>
                 <label style={styles.label}>Emri i Sallës *</label>
-                <input
-                  type="text"
-                  name="emri"
-                  required
-                  style={styles.inputModal}
-                  value={formData.emri}
-                  onChange={handleChange}
-                />
+                <input type="text" name="emri" required style={styles.inputModal} value={formData.emri} onChange={handleChange} />
               </div>
-
               <div style={styles.formGroup}>
                 <label style={styles.label}>Kati *</label>
-                <input
-                  type="number"
-                  name="kati"
-                  required
-                  style={styles.inputModal}
-                  value={formData.kati}
-                  onChange={handleChange}
-                />
+                <input type="number" name="kati" required style={styles.inputModal} value={formData.kati} onChange={handleChange} />
               </div>
-
               <div style={styles.formGroup}>
                 <label style={styles.label}>Statusi</label>
                 <select name="statusi" style={styles.selectModal} value={formData.statusi} onChange={handleChange}>
@@ -230,29 +190,14 @@ export default function Sallat() {
                   <option value="Në Renovim">Në Renovim</option>
                 </select>
               </div>
-
               <div style={styles.formGroup}>
                 <label style={styles.label}>Pajisjet</label>
-                <input
-                  type="text"
-                  name="pajisjet"
-                  placeholder="Projektor, Akustikë"
-                  style={styles.inputModal}
-                  value={formData.pajisjet}
-                  onChange={handleChange}
-                />
+                <input type="text" name="pajisjet" placeholder="Projektor, Akustikë" style={styles.inputModal} value={formData.pajisjet} onChange={handleChange} />
               </div>
-
               <div style={styles.formGroup}>
                 <label style={styles.label}>Përshkrimi</label>
-                <textarea
-                  name="pershkrimi"
-                  style={styles.textareaModal}
-                  value={formData.pershkrimi}
-                  onChange={handleChange}
-                />
+                <textarea name="pershkrimi" style={styles.textareaModal} value={formData.pershkrimi} onChange={handleChange} />
               </div>
-
               <div style={styles.modalActions}>
                 <button type="button" style={styles.cancelBtn} onClick={closeModal}>Anulo</button>
                 <button type="submit" style={styles.saveBtn}>Ruaj</button>
@@ -273,44 +218,32 @@ function StatusBadge({ status }) {
   };
   const c = colors[status] || { bg: '#2a2a2a', color: '#888' };
   return (
-    <span style={{
-      background: c.bg, color: c.color,
-      padding: '3px 10px', borderRadius: 20,
-      fontSize: 12, fontWeight: 500,
-      display: 'inline-block'
-    }}>
+    <span style={{ background: c.bg, color: c.color, padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 500, display: 'inline-block' }}>
       {status}
     </span>
   );
 }
 
 const styles = {
-  page:      { display: 'flex', minHeight: '100vh', background: '#0a0a0a' },
-  sidebar:   { width: 220, background: '#111', borderRight: '1px solid #222', display: 'flex', flexDirection: 'column', padding: '24px 0' },
-  logo:      { color: '#c8a96e', fontWeight: 700, fontSize: 16, padding: '0 24px 32px' },
-  nav:       { display: 'flex', flexDirection: 'column', gap: 4, padding: '0 12px', flex: 1 },
-  navBtn:    { background: 'none', border: 'none', color: '#888', padding: '10px 12px', borderRadius: 8, textAlign: 'left', cursor: 'pointer', fontSize: 14 },
-  navActive: { background: '#1a1a1a', border: 'none', color: '#fff', padding: '10px 12px', borderRadius: 8, textAlign: 'left', cursor: 'pointer', fontSize: 14, fontWeight: 600 },
-  main:      { flex: 1, padding: '32px 40px', overflowY: 'auto' },
-  header:    { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  pageTitle: { color: '#fff', fontSize: 28, fontWeight: 700, margin: 0 },
-  addBtn:    { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 8, padding: '10px 20px', cursor: 'pointer', fontWeight: 600, fontSize: 14 },
-  filters:   { display: 'flex', gap: 12, marginBottom: 24 },
-  search:    { background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, width: 280 },
-  select:    { background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14 },
-  loading:   { color: '#888', textAlign: 'center', padding: 40 },
-  tableWrap: { background: '#1a1a1a', border: '1px solid #222', borderRadius: 12, overflow: 'hidden' },
-  table:     { width: '100%', borderCollapse: 'collapse' },
-  thead:     { borderBottom: '1px solid #333' },
-  th:        { color: '#888', fontSize: 12, fontWeight: 600, padding: '12px 16px', textAlign: 'left', textTransform: 'uppercase' },
-  tr:        { borderBottom: '1px solid #1f1f1f' },
-  td:        { color: '#ddd', fontSize: 14, padding: '14px 16px' },
-  empty:     { color: '#555', textAlign: 'center', padding: 40 },
-  actions:   { display: 'flex', gap: 8 },
-  editBtn:   { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12 },
-  deleteBtn: { background: '#2d0000', color: '#f44336', border: '1px solid #f4433630', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12 },
-  navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
-
+  page:         { display: 'flex', minHeight: '100vh', background: '#0a0a0a' },
+  main:         { flex: 1, padding: '32px 40px', overflowY: 'auto' },
+  header:       { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  pageTitle:    { color: '#fff', fontSize: 28, fontWeight: 700, margin: 0 },
+  addBtn:       { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 8, padding: '10px 20px', cursor: 'pointer', fontWeight: 600, fontSize: 14 },
+  filters:      { display: 'flex', gap: 12, marginBottom: 24 },
+  search:       { background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, width: 280 },
+  select:       { background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14 },
+  loading:      { color: '#888', textAlign: 'center', padding: 40 },
+  tableWrap:    { background: '#1a1a1a', border: '1px solid #222', borderRadius: 12, overflow: 'hidden' },
+  table:        { width: '100%', borderCollapse: 'collapse' },
+  thead:        { borderBottom: '1px solid #333' },
+  th:           { color: '#888', fontSize: 12, fontWeight: 600, padding: '12px 16px', textAlign: 'left', textTransform: 'uppercase' },
+  tr:           { borderBottom: '1px solid #1f1f1f' },
+  td:           { color: '#ddd', fontSize: 14, padding: '14px 16px' },
+  empty:        { color: '#555', textAlign: 'center', padding: 40 },
+  actions:      { display: 'flex', gap: 8 },
+  editBtn:      { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12 },
+  deleteBtn:    { background: '#2d0000', color: '#f44336', border: '1px solid #f4433630', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12 },
   modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
   modalCard:    { background: '#151515', border: '1px solid #333', borderRadius: 12, padding: 24, width: 380 },
   modalTitle:   { color: '#fff', margin: '0 0 16px 0', fontSize: 18 },
@@ -322,5 +255,5 @@ const styles = {
   textareaModal:{ background: '#1a1a1a', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', minHeight: 60, resize: 'none' },
   modalActions: { display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 12 },
   cancelBtn:    { background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: 14 },
-  saveBtn:      { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 6, padding: '8px 20px', cursor: 'pointer', fontWeight: 600, fontSize: 14 }
+  saveBtn:      { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 6, padding: '8px 20px', cursor: 'pointer', fontWeight: 600, fontSize: 14 },
 };

@@ -6,12 +6,17 @@ import { biletatApi } from '../api/biletatApi';
 import Artistet from '../components/Artistet';
 import Ekspozitat from '../components/Ekspozitat';
 import VepratArtit from '../components/VepratArtit';
+import Sallat from './Sallat';
+import Punetoret from './Punetoret';
+import Sponsoret from './Sponsoret';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [ngjarjet, setNgjarjet] = useState([]);
   const [biletat, setBiletat]   = useState([]);
+  const [punetoret, setPunetoret] = useState([]);
+  const [sponsoret, setSponsoret] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [activePage, setActivePage] = useState('dashboard');
 
@@ -25,6 +30,15 @@ export default function Dashboard() {
       ]);
       setNgjarjet(n.data);
       setBiletat(b.data);
+
+      fetch('http://localhost:5002/api/punetoret', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      }).then(res => res.json()).then(data => setPunetoret(data)).catch(() => {});
+
+      fetch('http://localhost:5002/api/sponzoret', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      }).then(res => res.json()).then(data => setSponsoret(data)).catch(() => {});
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -81,6 +95,23 @@ export default function Dashboard() {
             onClick={() => setActivePage('veprat')}
           >Veprat e Artit</button>
 
+          <div style={styles.navDivider} />
+
+          <button
+            style={activePage === 'sallat' ? styles.navActive : styles.navBtn}
+            onClick={() => setActivePage('sallat')}
+          >Sallat</button>
+
+          <button
+            style={activePage === 'punetoret' ? styles.navActive : styles.navBtn}
+            onClick={() => setActivePage('punetoret')}
+          >Punëtorët</button>
+
+          <button
+            style={activePage === 'sponsoret' ? styles.navActive : styles.navBtn}
+            onClick={() => setActivePage('sponsoret')}
+          >Sponsorët</button>
+
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
       </div>
@@ -88,12 +119,13 @@ export default function Dashboard() {
       {/* Main content */}
       <div style={styles.main}>
 
-        {/* CRUD pages */}
         {activePage === 'artistet'   && <Artistet />}
         {activePage === 'ekspozitat' && <Ekspozitat />}
         {activePage === 'veprat'     && <VepratArtit />}
+        {activePage === 'sallat'     && <Sallat />}
+        {activePage === 'punetoret'  && <Punetoret />}
+        {activePage === 'sponsoret'  && <Sponsoret />}
 
-        {/* Dashboard page */}
         {activePage === 'dashboard' && (
           <>
             <div style={styles.header}>
@@ -110,6 +142,11 @@ export default function Dashboard() {
                   <MetricCard label="Ngjarje Aktive"     value={activeEvents}   color="#4caf50" />
                   <MetricCard label="Bileta të Shitura"  value={totalAttendees} color="#2196f3" />
                   <MetricCard label="Të Ardhura (€)"     value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                </div>
+
+                <div style={{...styles.grid4, gridTemplateColumns: 'repeat(2, 1fr)'}}>
+                  <MetricCard label="Punëtorët Gjithsej" value={punetoret.length} color="#ff9800" />
+                  <MetricCard label="Sponsorët Gjithsej" value={sponsoret.length} color="#00bcd4" />
                 </div>
 
                 <div style={styles.section}>
@@ -214,5 +251,4 @@ const styles = {
   td:           { color: '#ddd', fontSize: 14, padding: '12px' },
   empty:        { color: '#555', textAlign: 'center', padding: 32 },
   editBtn:      { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '4px 12px', cursor: 'pointer', fontSize: 12 },
-  navDivider: { borderTop: '1px solid #222', margin: '8px 0' },
 };

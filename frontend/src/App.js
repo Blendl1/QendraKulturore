@@ -13,6 +13,8 @@ import VepratArtit from './components/VepratArtit';
 import PublicArtistet from './components/PublicArtistet';
 import PublicVepratArtit from './components/PublicVepratArtit';
 import Sallat from './pages/Sallat';
+import Punetoret from './pages/Punetoret';
+import Sponsoret from './pages/Sponsoret';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -64,6 +66,8 @@ function App() {
           } />
 
           <Route path="/sallat" element={<PrivateRoute><Sallat /></PrivateRoute>} />
+          <Route path="/punetoret" element={<PrivateRoute><Punetoret /></PrivateRoute>} />
+          <Route path="/sponsoret" element={<PrivateRoute><Sponsoret /></PrivateRoute>} />
 
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="*" element={<Navigate to="/home" />} />
