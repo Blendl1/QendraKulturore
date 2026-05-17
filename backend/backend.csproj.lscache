@@ -62,11 +62,15 @@ Controllers/
  DashboardController.cs
  EkspozitatController.cs
  NgjarjaController.cs
+ PjesemarresController.cs
  PunetoretController.cs
+ RegjistrimWorkshopController.cs
  SallatController.cs
  SponzoretController.cs
+ UsersController.cs
  VepratArtitController.cs
  WeatherForecastController.cs
+ WorkshopController.cs
 Data/ApplicationDbContext.cs
 Migrations/
  20260329160134_InitialCreate.cs
@@ -89,6 +93,10 @@ Migrations/
  20260418223115_ShtuarAuthUser.Designer.cs
  20260504205833_FixDecimalPrecision.cs
  20260504205833_FixDecimalPrecision.Designer.cs
+ 20260505143229_UpdateSchema.cs
+ 20260505143229_UpdateSchema.Designer.cs
+ 20260514125757_AddWorkshopModule.cs
+ 20260514125757_AddWorkshopModule.Designer.cs
  ApplicationDbContextModelSnapshot.cs
 Models/
  AppUser.cs
@@ -98,11 +106,14 @@ Models/
  Ekspozita.cs
  Ngjarja.cs
  NgjarjeArtist.cs
+ Pjesemarres.cs
  Punetori.cs
  RefreshToken.cs
+ RegjistrimWorkshop.cs
  Salla.cs
  Sponzori.cs
  VepratArtit.cs
+ Workshop.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  backend.AssemblyInfo.cs
