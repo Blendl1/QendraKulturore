@@ -3,9 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ngjarjetApi } from '../api/ngjarjetApi';
 import { biletatApi } from '../api/biletatApi';
+import { workshopApi, pjesemarresApi, regjistrimApi } from '../api/workshopApi';
 import Artistet from '../components/Artistet';
 import Ekspozitat from '../components/Ekspozitat';
 import VepratArtit from '../components/VepratArtit';
+import Workshopet from './Workshopet';
+import Pjesemarresit from './Pjesemarresit';
+import Regjistrimet from './Regjistrimet';
 
 function useWindowWidth() {
     const [width, setWidth] = useState(window.innerWidth);
@@ -20,10 +24,13 @@ function useWindowWidth() {
 export default function Dashboard() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [ngjarjet, setNgjarjet]   = useState([]);
-    const [biletat, setBiletat]     = useState([]);
-    const [loading, setLoading]     = useState(true);
-    const [activePage, setActivePage] = useState('dashboard');
+    const [ngjarjet, setNgjarjet]       = useState([]);
+    const [biletat, setBiletat]         = useState([]);
+    const [workshopet, setWorkshopet]   = useState([]);
+    const [pjesemarresit, setPjesemarresit] = useState([]);
+    const [regjistrimet, setRegjistrimet]   = useState([]);
+    const [loading, setLoading]         = useState(true);
+    const [activePage, setActivePage]   = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const width    = useWindowWidth();
     const isMobile = width < 768;
@@ -32,12 +39,18 @@ export default function Dashboard() {
 
     const loadData = async () => {
         try {
-            const [n, b] = await Promise.all([
+            const [n, b, w, p, r] = await Promise.all([
                 ngjarjetApi.getAll(),
                 biletatApi.getAll(),
+                workshopApi.getAll(),
+                pjesemarresApi.getAll(),
+                regjistrimApi.getAll(),
             ]);
             setNgjarjet(n.data);
             setBiletat(b.data);
+            setWorkshopet(w.data);
+            setPjesemarresit(p.data);
+            setRegjistrimet(r.data);
         } catch (err) {
             console.error(err);
         } finally {
@@ -55,15 +68,19 @@ export default function Dashboard() {
         if (isMobile) setSidebarOpen(false);
     };
 
-    const totalRevenue   = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
-    const totalAttendees = biletat.length;
-    const activeEvents   = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
-    const totalEvents    = ngjarjet.length;
+    const totalRevenue        = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
+    const totalAttendees      = biletat.length;
+    const activeEvents        = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
+    const totalEvents         = ngjarjet.length;
+    const totalWorkshopet     = workshopet.length;
+    const activeWorkshopet    = workshopet.filter(w => w.statusi === 'Aktiv').length;
+    const totalPjesemarresit  = pjesemarresit.length;
+    const totalRegjistrimet   = regjistrimet.length;
 
     return (
         <div style={styles.page}>
 
-            {/* Hamburger butoni - vetëm mobile */}
+            {/* Hamburger - vetëm mobile */}
             {isMobile && (
                 <button
                     style={styles.hamburger}
@@ -76,12 +93,9 @@ export default function Dashboard() {
                 </button>
             )}
 
-            {/* Overlay kur sidebar është hapur në mobile */}
+            {/* Overlay */}
             {isMobile && sidebarOpen && (
-                <div
-                    style={styles.overlay}
-                    onClick={() => setSidebarOpen(false)}
-                />
+                <div style={styles.overlay} onClick={() => setSidebarOpen(false)} />
             )}
 
             {/* Sidebar */}
@@ -96,13 +110,17 @@ export default function Dashboard() {
             }}>
                 <div style={styles.logo}>QendraKulturore</div>
                 <nav style={styles.nav}>
-                    <button style={activePage === 'dashboard' ? styles.navActive : styles.navBtn} onClick={() => handleNav('dashboard')}>Dashboard</button>
-                    <button style={styles.navBtn} onClick={() => { navigate('/ngjarjet'); if(isMobile) setSidebarOpen(false); }}>Ngjarjet</button>
-                    <button style={styles.navBtn} onClick={() => { navigate('/biletat'); if(isMobile) setSidebarOpen(false); }}>Biletat</button>
+                    <button style={activePage === 'dashboard'     ? styles.navActive : styles.navBtn} onClick={() => handleNav('dashboard')}>Dashboard</button>
+                    <button style={styles.navBtn} onClick={() => { navigate('/ngjarjet'); if (isMobile) setSidebarOpen(false); }}>Ngjarjet</button>
+                    <button style={styles.navBtn} onClick={() => { navigate('/biletat');  if (isMobile) setSidebarOpen(false); }}>Biletat</button>
                     <div style={styles.navDivider} />
-                    <button style={activePage === 'artistet'   ? styles.navActive : styles.navBtn} onClick={() => handleNav('artistet')}>Artistët</button>
-                    <button style={activePage === 'ekspozitat' ? styles.navActive : styles.navBtn} onClick={() => handleNav('ekspozitat')}>Ekspozitat</button>
-                    <button style={activePage === 'veprat'     ? styles.navActive : styles.navBtn} onClick={() => handleNav('veprat')}>Veprat e Artit</button>
+                    <button style={activePage === 'artistet'      ? styles.navActive : styles.navBtn} onClick={() => handleNav('artistet')}>Artistët</button>
+                    <button style={activePage === 'ekspozitat'    ? styles.navActive : styles.navBtn} onClick={() => handleNav('ekspozitat')}>Ekspozitat</button>
+                    <button style={activePage === 'veprat'        ? styles.navActive : styles.navBtn} onClick={() => handleNav('veprat')}>Veprat e Artit</button>
+                    <div style={styles.navDivider} />
+                    <button style={activePage === 'workshopet'    ? styles.navActive : styles.navBtn} onClick={() => handleNav('workshopet')}>Workshopet</button>
+                    <button style={activePage === 'pjesemarresit' ? styles.navActive : styles.navBtn} onClick={() => handleNav('pjesemarresit')}>Pjesëmarrësit</button>
+                    <button style={activePage === 'regjistrimet'  ? styles.navActive : styles.navBtn} onClick={() => handleNav('regjistrimet')}>Regjistrimet</button>
                 </nav>
                 <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
             </div>
@@ -110,12 +128,14 @@ export default function Dashboard() {
             {/* Main content */}
             <div style={{
                 ...styles.main,
-                marginLeft: 0,
                 padding: isMobile ? '60px 16px 24px' : '32px 40px',
             }}>
-                {activePage === 'artistet'   && <Artistet />}
-                {activePage === 'ekspozitat' && <Ekspozitat />}
-                {activePage === 'veprat'     && <VepratArtit />}
+                {activePage === 'artistet'      && <Artistet />}
+                {activePage === 'ekspozitat'    && <Ekspozitat />}
+                {activePage === 'veprat'        && <VepratArtit />}
+                {activePage === 'workshopet'    && <Workshopet />}
+                {activePage === 'pjesemarresit' && <Pjesemarresit />}
+                {activePage === 'regjistrimet'  && <Regjistrimet />}
 
                 {activePage === 'dashboard' && (
                     <>
@@ -137,13 +157,17 @@ export default function Dashboard() {
                                     ...styles.grid4,
                                     gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
                                 }}>
-                                    <MetricCard label="Ngjarje Gjithsej"  value={totalEvents}    color="#c8a96e" />
-                                    <MetricCard label="Ngjarje Aktive"     value={activeEvents}   color="#4caf50" />
-                                    <MetricCard label="Bileta të Shitura"  value={totalAttendees} color="#2196f3" />
-                                    <MetricCard label="Të Ardhura (€)"     value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                                    <MetricCard label="Ngjarje Gjithsej"    value={totalEvents}         color="#c8a96e" />
+                                    <MetricCard label="Ngjarje Aktive"       value={activeEvents}        color="#4caf50" />
+                                    <MetricCard label="Bileta të Shitura"    value={totalAttendees}      color="#2196f3" />
+                                    <MetricCard label="Të Ardhura (€)"       value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                                    <MetricCard label="Workshopet Gjithsej"  value={totalWorkshopet}     color="#c8a96e" />
+                                    <MetricCard label="Workshopet Aktive"    value={activeWorkshopet}    color="#4caf50" />
+                                    <MetricCard label="Pjesëmarrësit"        value={totalPjesemarresit}  color="#2196f3" />
+                                    <MetricCard label="Regjistrimet"         value={totalRegjistrimet}   color="#ff9800" />
                                 </div>
 
-                                {/* Tabela */}
+                                {/* Tabela Ngjarjet */}
                                 <div style={styles.section}>
                                     <div style={{
                                         ...styles.sectionHeader,
@@ -158,7 +182,6 @@ export default function Dashboard() {
                                     </div>
 
                                     {isMobile ? (
-                                        /* Kartat në vend të tabelës në mobile */
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                             {ngjarjet.slice(0, 5).map(n => (
                                                 <div key={n.id} style={styles.mobileRow}>
@@ -203,6 +226,64 @@ export default function Dashboard() {
                                                 ))}
                                                 {ngjarjet.length === 0 && (
                                                     <tr><td colSpan={6} style={styles.empty}>Nuk ka ngjarje ende.</td></tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    )}
+                                </div>
+
+                                {/* Tabela Workshopet */}
+                                <div style={{ ...styles.section, marginTop: 24 }}>
+                                    <div style={{
+                                        ...styles.sectionHeader,
+                                        flexDirection: isMobile ? 'column' : 'row',
+                                        gap: isMobile ? 12 : 0,
+                                        alignItems: isMobile ? 'flex-start' : 'center',
+                                    }}>
+                                        <h2 style={styles.sectionTitle}>Workshopet e Fundit</h2>
+                                        <button style={styles.addBtn} onClick={() => handleNav('workshopet')}>
+                                            + Shto Workshop
+                                        </button>
+                                    </div>
+
+                                    {isMobile ? (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                            {workshopet.slice(0, 5).map(w => (
+                                                <div key={w.id} style={styles.mobileRow}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                                                        <span style={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>{w.titulli}</span>
+                                                        <StatusBadge status={w.statusi} />
+                                                    </div>
+                                                    <div style={{ color: '#888', fontSize: 13 }}>
+                                                        {new Date(w.dataFillimit).toLocaleDateString('sq-AL')} · Kapaciteti: {w.kapaciteti}
+                                                    </div>
+                                                    <div style={{ color: '#c8a96e', fontWeight: 600, marginTop: 8 }}>€{w.cmimi}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <table style={styles.table}>
+                                            <thead>
+                                                <tr style={styles.thead}>
+                                                    <th style={styles.th}>Titulli</th>
+                                                    <th style={styles.th}>Data</th>
+                                                    <th style={styles.th}>Kapaciteti</th>
+                                                    <th style={styles.th}>Statusi</th>
+                                                    <th style={styles.th}>Çmimi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {workshopet.slice(0, 5).map(w => (
+                                                    <tr key={w.id} style={styles.tr}>
+                                                        <td style={styles.td}>{w.titulli}</td>
+                                                        <td style={styles.td}>{new Date(w.dataFillimit).toLocaleDateString('sq-AL')}</td>
+                                                        <td style={styles.td}>{w.kapaciteti}</td>
+                                                        <td style={styles.td}><StatusBadge status={w.statusi} /></td>
+                                                        <td style={styles.td}>€{w.cmimi?.toLocaleString()}</td>
+                                                    </tr>
+                                                ))}
+                                                {workshopet.length === 0 && (
+                                                    <tr><td colSpan={5} style={styles.empty}>Nuk ka workshop ende.</td></tr>
                                                 )}
                                             </tbody>
                                         </table>

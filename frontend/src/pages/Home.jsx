@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import PublicEkspozitat from '../components/PublicEkspozitat';
 import PublicVepratArtit from '../components/PublicVepratArtit';
+import PublicWorkshopet from '../components/PublicWorkshopet';
 
 function useWindowWidth() {
     const [width, setWidth] = useState(window.innerWidth);
@@ -146,6 +147,9 @@ export default function Home() {
 
             {/* PUBLIC EKSPOZITAT */}
             <PublicEkspozitat />
+
+            {/* PUBLIC WORKSHOPET */}
+            <PublicWorkshopet />
 
             {/* PUBLIC VEPRAT E ARTIT */}
             <PublicVepratArtit />
