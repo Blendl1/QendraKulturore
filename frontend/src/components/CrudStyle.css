@@ -201,3 +201,98 @@
     font-weight: 600;
     color: #374151;
 }
+
+@media (max-width: 1024px) {
+    .crud-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .crud-card {
+        width: 100%;
+    }
+
+    .crud-list {
+        gap: 16px;
+    }
+
+    .public-section {
+        padding: 24px;
+    }
+
+    .modal-box {
+        width: 90%;
+        padding: 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .crud-title {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .crud-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .crud-form {
+        padding: 16px;
+    }
+
+    .crud-card {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .crud-list {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .crud-actions {
+        flex-wrap: wrap;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        flex: 1;
+        text-align: center;
+    }
+
+    .public-section {
+        padding: 16px;
+    }
+
+    .section-title-home {
+        font-size: 22px;
+    }
+
+    .ekspozita-imazhet-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .modal-box {
+        width: 95%;
+        padding: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .crud-form input,
+    .crud-form select,
+    .crud-form button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .ekspozita-imazhet-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .ekspozita-imazh {
+        height: 120px;
+    }
+}

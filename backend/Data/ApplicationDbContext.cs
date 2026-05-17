@@ -19,7 +19,9 @@ namespace backend.Data
 		public DbSet<Salla> Sallat { get; set; }
 		public DbSet<Sponzori> Sponzoret { get; set; }
 		public DbSet<Punetori> Punetoret { get; set; }
-		
+		public DbSet<Workshop> Workshopet { get; set; }
+public DbSet<Pjesemarres> Pjesemarresit { get; set; }
+public DbSet<RegjistrimWorkshop> RegjistrimetWorkshop { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
