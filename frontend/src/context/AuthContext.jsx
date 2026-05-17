@@ -8,13 +8,24 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // On app load, check if user is already logged in
     const token = localStorage.getItem('accessToken');
     const savedUser = localStorage.getItem('user');
     if (token && savedUser) {
       setUser(JSON.parse(savedUser));
     }
     setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (e.key === 'logout-event') {
+        setUser(null);
+        localStorage.clear();
+        window.location.replace('/login');
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
   const login = async (email, password) => {
@@ -35,8 +46,11 @@ export function AuthProvider({ children }) {
     try {
       await authApi.logout(refreshToken, accessToken);
     } catch {}
+
+    localStorage.setItem('logout-event', Date.now());
     localStorage.clear();
     setUser(null);
+    window.location.replace('/login');
   };
 
   return (
