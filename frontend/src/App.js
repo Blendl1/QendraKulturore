@@ -12,6 +12,7 @@ import Ekspozitat from './components/Ekspozitat';
 import VepratArtit from './components/VepratArtit';
 import PublicArtistet from './components/PublicArtistet';
 import PublicVepratArtit from './components/PublicVepratArtit';
+import Sallat from './pages/Sallat';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -61,6 +62,8 @@ function App() {
           <Route path="/biletat" element={
             <PrivateRoute><Biletat /></PrivateRoute>
           } />
+
+          <Route path="/sallat" element={<PrivateRoute><Sallat /></PrivateRoute>} />
 
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="*" element={<Navigate to="/home" />} />
