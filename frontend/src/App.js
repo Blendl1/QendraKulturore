@@ -19,6 +19,8 @@ import Pjesemarresit from './pages/Pjesemarresit';
 import PjesemarresForm from './pages/PjesemarresForm';
 import Regjistrimet from './pages/Regjistrimet';
 import RegjistrimForm from './pages/RegjistrimForm';
+import PerNe from './pages/PerNe';
+import Kontakt from './pages/Kontakt';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -44,6 +46,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/artistet-public" element={<PublicArtistet />} />
+          <Route path="/per-ne" element={<PerNe />} />
+          <Route path="/kontakt" element={<Kontakt />} />
 
           <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
           <Route path="/artistet" element={<PrivateRoute><Artistet /></PrivateRoute>} />
