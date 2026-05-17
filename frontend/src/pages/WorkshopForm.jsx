@@ -47,7 +47,7 @@ export default function WorkshopForm() {
       } else {
         await workshopApi.create(form);
       }
-      navigate('/workshopet');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data || 'Gabim gjatë ruajtjes.');
     } finally {
@@ -72,7 +72,7 @@ export default function WorkshopForm() {
       <div style={styles.main}>
         <div style={styles.header}>
           <h1 style={styles.pageTitle}>{isEdit ? 'Ndrysho Workshop' : 'Shto Workshop të Ri'}</h1>
-          <button style={styles.backBtn} onClick={() => navigate('/workshopet')}>← Kthehu</button>
+          <button style={styles.backBtn} onClick={() => navigate('/dashboard')}>← Kthehu</button>
         </div>
 
         {error && <div style={styles.error}>{error}</div>}
@@ -119,7 +119,7 @@ export default function WorkshopForm() {
           </Field>
 
           <div style={styles.formFooter}>
-            <button type="button" style={styles.cancelBtn} onClick={() => navigate('/workshopet')}>Anulo</button>
+            <button type="button" style={styles.cancelBtn} onClick={() => navigate('/dashboard')}>Anulo</button>
             <button type="submit" style={styles.submitBtn} disabled={loading}>
               {loading ? 'Duke ruajtur...' : (isEdit ? 'Ruaj Ndryshimet' : 'Krijo Workshop')}
             </button>
