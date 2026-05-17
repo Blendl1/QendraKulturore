@@ -53,6 +53,12 @@ export default function Ngjarjet() {
   <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=artistet')}>Artistët</button>
   <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=ekspozitat')}>Ekspozitat</button>
   <button style={styles.navBtn} onClick={() => navigate('/dashboard?page=veprat')}>Veprat e Artit</button>
+  <div style={styles.navDivider} />
+  <button style={styles.navBtn} onClick={() => navigate('/workshopet')}>Workshopet</button>
+  <button style={styles.navBtn} onClick={() => navigate('/pjesemarresit')}>Pjesëmarrësit</button>
+  <button style={styles.navBtn} onClick={() => navigate('/regjistrimet')}>Regjistrimet</button>
+  <div style={styles.navDivider} />
+  <button style={styles.navBtn} onClick={() => navigate('/dashboard')}>Përdoruesit</button>
 </nav>
       </div>
 

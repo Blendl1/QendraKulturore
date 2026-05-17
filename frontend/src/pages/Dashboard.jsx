@@ -246,28 +246,100 @@ const styles = {
 function UsersList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editUser, setEditUser] = useState(null);
+  const [editForm, setEditForm] = useState({ fullName: '', email: '' });
+  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    fetch(`${process.env.REACT_APP_API_URL}/api/Users`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+  const token = localStorage.getItem('accessToken');
+  const apiBase = `${process.env.REACT_APP_API_URL}/api/Users`;
+
+  const loadUsers = () => {
+    fetch(apiBase, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => { setUsers(data); setLoading(false); })
       .catch(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { loadUsers(); }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('A jeni i sigurt që doni ta fshini këtë përdorues?')) return;
+    await fetch(`${apiBase}/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    setMessage('Përdoruesi u fshi.');
+    loadUsers();
+  };
+
+  const handleRoleChange = async (id, currentRoles) => {
+    const newRole = currentRoles.includes('Admin') ? 'User' : 'Admin';
+    await fetch(`${apiBase}/${id}/role`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: newRole })
+    });
+    setMessage(`Roli u ndryshua në ${newRole}.`);
+    loadUsers();
+  };
+
+  const handleEditOpen = (u) => {
+    setEditUser(u.id);
+    setEditForm({ fullName: u.fullName, email: u.email });
+  };
+
+  const handleEditSave = async () => {
+    await fetch(`${apiBase}/${editUser}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName: editForm.fullName, email: editForm.email })
+    });
+    setEditUser(null);
+    setMessage('Përdoruesi u përditësua.');
+    loadUsers();
+  };
 
   if (loading) return <div style={{ color: '#888', padding: 40 }}>Duke ngarkuar...</div>;
 
   return (
     <div style={styles.section}>
-      <h2 style={{ color: '#fff', marginBottom: 20 }}>Përdoruesit</h2>
+      <h2 style={{ color: '#fff', marginBottom: 8 }}>Përdoruesit</h2>
+      {message && (
+        <div style={{ color: '#4caf50', marginBottom: 16, fontSize: 13 }}>{message}</div>
+      )}
+
+      {/* Edit modal */}
+      {editUser && (
+        <div style={uStyles.modal}>
+          <div style={uStyles.modalCard}>
+            <h3 style={{ color: '#fff', marginBottom: 16 }}>Ndrysho Përdoruesin</h3>
+            <label style={uStyles.label}>Emri i plotë</label>
+            <input
+              style={uStyles.input}
+              value={editForm.fullName}
+              onChange={e => setEditForm({ ...editForm, fullName: e.target.value })}
+            />
+            <label style={uStyles.label}>Email</label>
+            <input
+              style={uStyles.input}
+              value={editForm.email}
+              onChange={e => setEditForm({ ...editForm, email: e.target.value })}
+            />
+            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+              <button style={uStyles.saveBtn} onClick={handleEditSave}>Ruaj</button>
+              <button style={uStyles.cancelBtn} onClick={() => setEditUser(null)}>Anulo</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <table style={styles.table}>
         <thead>
           <tr style={styles.thead}>
             <th style={styles.th}>Emri</th>
             <th style={styles.th}>Email</th>
             <th style={styles.th}>Roli</th>
+            <th style={styles.th}>Veprime</th>
           </tr>
         </thead>
         <tbody>
@@ -276,13 +348,41 @@ function UsersList() {
               <td style={styles.td}>{u.fullName}</td>
               <td style={styles.td}>{u.email}</td>
               <td style={styles.td}>{u.roles?.join(', ')}</td>
+              <td style={styles.td}>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button
+                    style={uStyles.editBtn}
+                    onClick={() => handleEditOpen(u)}
+                  >Ndrysho</button>
+                  <button
+                    style={uStyles.roleBtn}
+                    onClick={() => handleRoleChange(u.id, u.roles)}
+                  >{u.roles?.includes('Admin') ? 'Bëj User' : 'Bëj Admin'}</button>
+                  <button
+                    style={uStyles.deleteBtn}
+                    onClick={() => handleDelete(u.id)}
+                  >Fshi</button>
+                </div>
+              </td>
             </tr>
           ))}
           {users.length === 0 && (
-            <tr><td colSpan={3} style={styles.empty}>Nuk ka përdorues.</td></tr>
+            <tr><td colSpan={4} style={styles.empty}>Nuk ka përdorues.</td></tr>
           )}
         </tbody>
       </table>
     </div>
   );
 }
+
+const uStyles = {
+  editBtn:   { background: '#222', color: '#fff', border: '1px solid #333', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 },
+  roleBtn:   { background: '#1a1a3a', color: '#2196f3', border: '1px solid #2196f3', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 },
+  deleteBtn: { background: '#3a1a1a', color: '#f44336', border: '1px solid #f44336', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12 },
+  modal:     { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 },
+  modalCard: { background: '#1a1a1a', border: '1px solid #333', borderRadius: 12, padding: 32, width: 400, display: 'flex', flexDirection: 'column', gap: 8 },
+  label:     { color: '#888', fontSize: 13 },
+  input:     { background: '#111', border: '1px solid #333', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14 },
+  saveBtn:   { background: '#c8a96e', color: '#000', border: 'none', borderRadius: 8, padding: '10px 20px', cursor: 'pointer', fontWeight: 700, fontSize: 14 },
+  cancelBtn: { background: 'none', color: '#888', border: '1px solid #333', borderRadius: 8, padding: '10px 20px', cursor: 'pointer', fontSize: 14 },
+};
