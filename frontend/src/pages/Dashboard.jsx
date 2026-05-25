@@ -7,6 +7,9 @@ import { workshopApi, pjesemarresApi, regjistrimApi } from '../api/workshopApi';
 import Artistet from '../components/Artistet';
 import Ekspozitat from '../components/Ekspozitat';
 import VepratArtit from '../components/VepratArtit';
+import Sallat from './Sallat';
+import Punetoret from './Punetoret';
+import Sponsoret from './Sponsoret';
 import Workshopet from './Workshopet';
 import Pjesemarresit from './Pjesemarresit';
 import Regjistrimet from './Regjistrimet';
@@ -16,6 +19,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [ngjarjet, setNgjarjet] = useState([]);
   const [biletat, setBiletat] = useState([]);
+  const [punetoret, setPunetoret] = useState([]);
+  const [sponsoret, setSponsoret] = useState([]);
   const [workshopet, setWorkshopet] = useState([]);
   const [pjesemarresit, setPjesemarresit] = useState([]);
   const [regjistrimet, setRegjistrimet] = useState([]);
@@ -38,6 +43,15 @@ export default function Dashboard() {
       setWorkshopet(w.data);
       setPjesemarresit(p.data);
       setRegjistrimet(r.data);
+
+      fetch('http://localhost:5002/api/punetoret', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
+      }).then(res => res.json()).then(data => setPunetoret(data)).catch(() => {});
+
+      fetch('http://localhost:5002/api/sponzoret', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('accessToken')}` }
+      }).then(res => res.json()).then(data => setSponsoret(data)).catch(() => {});
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -50,14 +64,14 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  const totalRevenue        = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
-  const totalAttendees      = biletat.length;
-  const activeEvents        = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
-  const totalEvents         = ngjarjet.length;
-  const totalWorkshopet     = workshopet.length;
-  const activeWorkshopet    = workshopet.filter(w => w.statusi === 'Aktiv').length;
-  const totalPjesemarresit  = pjesemarresit.length;
-  const totalRegjistrimet   = regjistrimet.length;
+  const totalRevenue       = biletat.reduce((sum, b) => sum + (b.cmimi || 0), 0);
+  const totalAttendees     = biletat.length;
+  const activeEvents       = ngjarjet.filter(n => n.statusi === 'Aktiv').length;
+  const totalEvents        = ngjarjet.length;
+  const totalWorkshopet    = workshopet.length;
+  const activeWorkshopet   = workshopet.filter(w => w.statusi === 'Aktiv').length;
+  const totalPjesemarresit = pjesemarresit.length;
+  const totalRegjistrimet  = regjistrimet.length;
 
   return (
     <div style={styles.page}>
@@ -76,6 +90,10 @@ export default function Dashboard() {
           <button style={activePage === 'pjesemarresit' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('pjesemarresit')}>Pjesëmarrësit</button>
           <button style={activePage === 'regjistrimet' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('regjistrimet')}>Regjistrimet</button>
           <div style={styles.navDivider} />
+          <button style={activePage === 'sallat' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('sallat')}>Sallat</button>
+          <button style={activePage === 'punetoret' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('punetoret')}>Punëtorët</button>
+          <button style={activePage === 'sponsoret' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('sponsoret')}>Sponsorët</button>
+          <div style={styles.navDivider} />
           <button style={activePage === 'users' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('users')}>Përdoruesit</button>
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
@@ -89,6 +107,9 @@ export default function Dashboard() {
         {activePage === 'pjesemarresit' && <Pjesemarresit />}
         {activePage === 'regjistrimet'  && <Regjistrimet />}
         {activePage === 'users'         && <UsersList />}
+        {activePage === 'sallat'        && <Sallat />}
+        {activePage === 'punetoret'     && <Punetoret />}
+        {activePage === 'sponsoret'     && <Sponsoret />}
 
         {activePage === 'dashboard' && (
           <>
@@ -102,14 +123,19 @@ export default function Dashboard() {
             ) : (
               <>
                 <div style={styles.grid4}>
-                  <MetricCard label="Ngjarje Gjithsej"     value={totalEvents}          color="#c8a96e" />
-                  <MetricCard label="Ngjarje Aktive"        value={activeEvents}         color="#4caf50" />
-                  <MetricCard label="Bileta të Shitura"     value={totalAttendees}       color="#2196f3" />
-                  <MetricCard label="Të Ardhura (€)"        value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
-                  <MetricCard label="Workshopet Gjithsej"   value={totalWorkshopet}      color="#c8a96e" />
-                  <MetricCard label="Workshopet Aktive"     value={activeWorkshopet}     color="#4caf50" />
-                  <MetricCard label="Pjesëmarrësit"         value={totalPjesemarresit}   color="#2196f3" />
-                  <MetricCard label="Regjistrimet"          value={totalRegjistrimet}    color="#ff9800" />
+                  <MetricCard label="Ngjarje Gjithsej"    value={totalEvents}        color="#c8a96e" />
+                  <MetricCard label="Ngjarje Aktive"       value={activeEvents}       color="#4caf50" />
+                  <MetricCard label="Bileta të Shitura"    value={totalAttendees}     color="#2196f3" />
+                  <MetricCard label="Të Ardhura (€)"       value={`€${totalRevenue.toLocaleString()}`} color="#9c27b0" />
+                  <MetricCard label="Workshopet Gjithsej"  value={totalWorkshopet}    color="#c8a96e" />
+                  <MetricCard label="Workshopet Aktive"    value={activeWorkshopet}   color="#4caf50" />
+                  <MetricCard label="Pjesëmarrësit"        value={totalPjesemarresit} color="#2196f3" />
+                  <MetricCard label="Regjistrimet"         value={totalRegjistrimet}  color="#ff9800" />
+                </div>
+
+                <div style={{...styles.grid4, gridTemplateColumns: 'repeat(2, 1fr)'}}>
+                  <MetricCard label="Punëtorët Gjithsej" value={punetoret.length} color="#ff9800" />
+                  <MetricCard label="Sponsorët Gjithsej" value={sponsoret.length} color="#00bcd4" />
                 </div>
 
                 <div style={styles.section}>
@@ -307,24 +333,14 @@ function UsersList() {
       {message && (
         <div style={{ color: '#4caf50', marginBottom: 16, fontSize: 13 }}>{message}</div>
       )}
-
-      {/* Edit modal */}
       {editUser && (
         <div style={uStyles.modal}>
           <div style={uStyles.modalCard}>
             <h3 style={{ color: '#fff', marginBottom: 16 }}>Ndrysho Përdoruesin</h3>
             <label style={uStyles.label}>Emri i plotë</label>
-            <input
-              style={uStyles.input}
-              value={editForm.fullName}
-              onChange={e => setEditForm({ ...editForm, fullName: e.target.value })}
-            />
+            <input style={uStyles.input} value={editForm.fullName} onChange={e => setEditForm({ ...editForm, fullName: e.target.value })} />
             <label style={uStyles.label}>Email</label>
-            <input
-              style={uStyles.input}
-              value={editForm.email}
-              onChange={e => setEditForm({ ...editForm, email: e.target.value })}
-            />
+            <input style={uStyles.input} value={editForm.email} onChange={e => setEditForm({ ...editForm, email: e.target.value })} />
             <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
               <button style={uStyles.saveBtn} onClick={handleEditSave}>Ruaj</button>
               <button style={uStyles.cancelBtn} onClick={() => setEditUser(null)}>Anulo</button>
@@ -332,7 +348,6 @@ function UsersList() {
           </div>
         </div>
       )}
-
       <table style={styles.table}>
         <thead>
           <tr style={styles.thead}>
@@ -350,18 +365,9 @@ function UsersList() {
               <td style={styles.td}>{u.roles?.join(', ')}</td>
               <td style={styles.td}>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  <button
-                    style={uStyles.editBtn}
-                    onClick={() => handleEditOpen(u)}
-                  >Ndrysho</button>
-                  <button
-                    style={uStyles.roleBtn}
-                    onClick={() => handleRoleChange(u.id, u.roles)}
-                  >{u.roles?.includes('Admin') ? 'Bëj User' : 'Bëj Admin'}</button>
-                  <button
-                    style={uStyles.deleteBtn}
-                    onClick={() => handleDelete(u.id)}
-                  >Fshi</button>
+                  <button style={uStyles.editBtn} onClick={() => handleEditOpen(u)}>Ndrysho</button>
+                  <button style={uStyles.roleBtn} onClick={() => handleRoleChange(u.id, u.roles)}>{u.roles?.includes('Admin') ? 'Bëj User' : 'Bëj Admin'}</button>
+                  <button style={uStyles.deleteBtn} onClick={() => handleDelete(u.id)}>Fshi</button>
                 </div>
               </td>
             </tr>
