@@ -10,9 +10,6 @@ import VepratArtit from '../components/VepratArtit';
 import Sallat from './Sallat';
 import Punetoret from './Punetoret';
 import Sponsoret from './Sponsoret';
-import Sallat from './Sallat';
-import Punetoret from './Punetoret';
-import Sponsoret from './Sponsoret';
 import Workshopet from './Workshopet';
 import Pjesemarresit from './Pjesemarresit';
 import Regjistrimet from './Regjistrimet';
@@ -98,23 +95,6 @@ export default function Dashboard() {
           <button style={activePage === 'sponsoret' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('sponsoret')}>Sponsorët</button>
           <div style={styles.navDivider} />
           <button style={activePage === 'users' ? styles.navActive : styles.navBtn} onClick={() => setActivePage('users')}>Përdoruesit</button>
-          <div style={styles.navDivider} />
-
-          <button
-            style={activePage === 'sallat' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('sallat')}
-          >Sallat</button>
-
-          <button
-            style={activePage === 'punetoret' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('punetoret')}
-          >Punëtorët</button>
-
-          <button
-            style={activePage === 'sponsoret' ? styles.navActive : styles.navBtn}
-            onClick={() => setActivePage('sponsoret')}
-          >Sponsorët</button>
-
         </nav>
         <button style={styles.logoutBtn} onClick={handleLogout}>Çkyçu</button>
       </div>
@@ -151,11 +131,6 @@ export default function Dashboard() {
                   <MetricCard label="Workshopet Aktive"    value={activeWorkshopet}   color="#4caf50" />
                   <MetricCard label="Pjesëmarrësit"        value={totalPjesemarresit} color="#2196f3" />
                   <MetricCard label="Regjistrimet"         value={totalRegjistrimet}  color="#ff9800" />
-                </div>
-
-                <div style={{...styles.grid4, gridTemplateColumns: 'repeat(2, 1fr)'}}>
-                  <MetricCard label="Punëtorët Gjithsej" value={punetoret.length} color="#ff9800" />
-                  <MetricCard label="Sponsorët Gjithsej" value={sponsoret.length} color="#00bcd4" />
                 </div>
 
                 <div style={{...styles.grid4, gridTemplateColumns: 'repeat(2, 1fr)'}}>
